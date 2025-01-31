@@ -29,7 +29,9 @@
           </p>
           <p>
             <small>
-              Pete Gadomski, Geospatial engineer at Development Seed
+              <a href="https://www.gadom.ski/">Pete Gadomski</a> is a geospatial
+              engineer at
+              <a href="https://developmentseed.org/">Development Seed</a>
             </small>
           </p>
         </section>
@@ -43,6 +45,10 @@
             <h2>Usage</h2>
 
             <img class="r-stretch" src="img/stac-usage.excalidraw.png" />
+          </section>
+          <section>
+            <blockquote>STAC's sweet spot is L1 to L2</blockquote>
+            <p>&mdash; me</p>
           </section>
           <section data-markdown>
             <textarea data-template>
@@ -68,16 +74,26 @@ https://github.com/stac-utils/ et al
         <section>
           <section>
             <h2>Issues</h2>
-
-            <ul style="font-size: xx-large">
-              <li>Original libraries (e.g. pystac) must move slowly</li>
-              <li>
-                Building for data providers 👩‍🍳, developers 💁‍♂️, and data users 😋
-                requires different strategies and methods
-              </li>
-              <li>Sometimes (but not always) performance matters</li>
-            </ul>
           </section>
+          <section>
+            <p>Original libraries (e.g. pystac) must move slowly</p>
+          </section>
+          <section>
+            <p>Building for <br /></p>
+            <table>
+              <tr>
+                <td>data providers 👩‍🍳</td>
+                <td>developers 💁‍♂️</td>
+                <td>data users 😋</td>
+              </tr>
+            </table>
+            <p>requires different strategies and methods</p>
+          </section>
+          <section>
+            <p>Sometimes (but not always) performance matters</p>
+          </section>
+        </section>
+        <section>
           <section>
             <h2>"Strategy"</h2>
 
@@ -100,6 +116,86 @@ https://github.com/stac-utils/ et al
               </tr>
             </table>
           </section>
+        </section>
+        <section>
+          <section>
+            <h2>cql2</h2>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h2>DuckDB</h2>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h2>Putting it together</h2>
+
+            <img
+              src="img/putting-it-together.excalidraw.png"
+              class="r-stretch"
+            />
+          </section>
+          <section>
+            <h2>Python libraries</h2>
+
+            <table style="font-size: large">
+              <tr>
+                <th>Name</th>
+                <th>Usage</th>
+              </tr>
+              <tr>
+                <td>
+                  <a href="https://github.com/gadomski/stacrs"
+                    >gadomski/stacrs</a
+                  >
+                </td>
+                <td>
+                  Read and write stac-geoparquet, query stac-geoparquet with
+                  DuckDB, search STAC APIs
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="https://github.com/developmentseed/cql2-rs/"
+                    >developmentseed/cql2-rs</a
+                  >
+                </td>
+                <td>
+                  Parse and transform cql2-text and cql2-json <br />(coming
+                  soon: build DuckDB and other SQL queries from cql2)
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="https://github.com/stac-utils/pgstacrs/"
+                    >stac-utils/pgstacrs</a
+                  >
+                </td>
+                <td>
+                  API for
+                  <a href="https://github.com/stac-utils/pgstac">pgstac</a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="https://github.com/developmentseed/obstore/"
+                    >developmentseed/obstore</a
+                  >
+                </td>
+                <td>
+                  High performance upload and download for multiple cloud
+                  providers
+                </td>
+              </tr>
+            </table>
+          </section>
+        </section>
+
+        <section>
+          <h2>Rust and Python</h2>
+
+          <p>🐍 🤝 🦀</p>
         </section>
       </div>
     </div>
