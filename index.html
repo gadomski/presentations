@@ -118,7 +118,12 @@ $ curl -s https://landsatlook.usgs.gov/stac-server/search | jq .numberMatched
           <section>
             <h2>stac-geoparquet</h2>
 
-            <table>
+            <img
+              src="img/geoparquet-size-chart.excalidraw.png"
+              class="r-stretch"
+            />
+
+            <table style="font-size: large">
               <thead>
                 <tr>
                   <th>Format</th>
@@ -140,13 +145,7 @@ $ curl -s https://landsatlook.usgs.gov/stac-server/search | jq .numberMatched
                 </tr>
               </tbody>
             </table>
-            <p style="font-size: x-large">1000 sentinel-2 items</p>
-            <hr />
-            <p>
-              <a href="https://github.com/stac-utils/stac-geoparquet"
-                >stac-utils/stac-geoparquet</a
-              >
-            </p>
+            <p style="font-size: large">1000 sentinel-2 items</p>
           </section>
           <section>
             <h2>stacrs</h2>
