@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+
+    <title>High-performance Python STAC tooling, backed by Rust</title>
+
+    <link rel="stylesheet" href="dist/reset.css" />
+    <link rel="stylesheet" href="dist/reveal.css" />
+    <link rel="stylesheet" href="dist/theme/devseed.css" />
+
+    <!-- Theme used for syntax highlighted code -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css" />
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <h2>High-performance Python STAC tooling, backed by Rust</h2>
+
+          <p>
+            <img src="img/STAC-04.png" height="128px" />
+            <br />
+            🐍 🤝 🦀
+          </p>
+          <p>
+            <small>
+              <a href="https://www.gadom.ski/">Pete Gadomski</a> is a geospatial
+              engineer at
+              <a href="https://developmentseed.org/">Development Seed</a>
+            </small>
+          </p>
+        </section>
+        <section>
+          <section>
+            <h2>STAC</h2>
+
+            <img class="r-stretch" src="img/stac-entities.excalidraw.png" />
+          </section>
+          <section>
+            <h2>Usage</h2>
+
+            <img class="r-stretch" src="img/stac-usage.excalidraw.png" />
+          </section>
+          <section>
+            <blockquote>STAC's sweet spot is L1 to L2</blockquote>
+            <p>&mdash; me</p>
+          </section>
+          <section data-markdown>
+            <textarea data-template>
+				    <!-- .slide: style="font-size: medium" -->
+				## Tools (Python)
+				| Repository | Description | 👩‍🍳 |💁‍♂️ | 😋️ |
+| -- | -- | -- | -- | -- |
+| [pystac](https://github.com/stac-utils/pystac) | Python library for working with any SpatioTemporal Asset Catalog (STAC) |  ✅ | ✅ | ✅ |
+| [stactools](https://github.com/stac-utils/stactools) | Command line utility and Python library for STAC | ✅ |  |  |
+| [stac-fastapi](https://github.com/stac-utils/stac-fastapi) | STAC API implementation with FastAPI.  |  | ✅ |  |
+| [stac-pydantic](https://github.com/stac-utils/stac-pydantic) | Pydantic data models for the STAC spec |  | ✅ |  |
+| [stac-geoparquet](https://github.com/stac-utils/stac-geoparquet) | Convert STAC items between JSON, GeoParquet, pgstac, and Delta Lake. |  | ✅ | ✅ |
+| [pystac-client](https://github.com/stac-utils/pystac-client) | Python client for searching STAC APIs |  |  | ✅ |
+| [odc-stac](https://github.com/opendatacube/odc-stac) |  Load STAC items into xarray Datasets.  |  | |  ✅ |
+| [stackstac](https://github.com/gjoseph92/stackstac) |   Turn a STAC catalog into a dask-based xarray   |  | |  ✅ |
+| etc... |  | | |  |
+
+https://github.com/stac-utils/ et al
+			</textarea
+            >
+          </section>
+        </section>
+        <section>
+          <section>
+            <h2>Issues</h2>
+          </section>
+          <section>
+            <p>Original libraries (e.g. pystac) must move slowly</p>
+
+            <img src="img/pystac-used-by.png" />
+          </section>
+          <section>
+            <p>Building for <br /></p>
+            <table>
+              <tr>
+                <td>data providers 👩‍🍳</td>
+                <td>developers 💁‍♂️</td>
+                <td>data users 😋</td>
+              </tr>
+            </table>
+            <p>requires different strategies and methods</p>
+          </section>
+          <section>
+            <p>Sometimes (but not always) performance matters</p>
+
+            <pre>
+            <code style="font-size: large" data-trim class="language-shell">
+$ curl -s https://landsatlook.usgs.gov/stac-server/search | jq .numberMatched
+45955446
+            </code>
+            </pre>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h2>"Strategy"</h2>
+
+            <ol>
+              <li>Build lots of small, bespoke libraries</li>
+              <li>Stitch them together</li>
+              <li>...</li>
+              <li>Don't profit?! (it's open source, after all)</li>
+            </ol>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h2>stac-geoparquet</h2>
+
+            <img
+              src="img/geoparquet-size-chart.excalidraw.png"
+              class="r-stretch"
+            />
+
+            <table style="font-size: large">
+              <thead>
+                <tr>
+                  <th>Format</th>
+                  <th>Size</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>json</td>
+                  <td>21 MB</td>
+                </tr>
+                <tr>
+                  <td>json.gz</td>
+                  <td>614 kB</td>
+                </tr>
+                <tr>
+                  <td>parquet</td>
+                  <td>488 kB</td>
+                </tr>
+                <tr>
+                  <td>parquet (compressed)</td>
+                  <td>179 kB</td>
+                </tr>
+              </tbody>
+            </table>
+            <p style="font-size: large">1000 sentinel-2 items</p>
+          </section>
+          <section>
+            <h2>stacrs</h2>
+            <pre>
+            <code style="font-size: large" data-trim>
+              $ python -m pip install stacrs
+              </code></pre>
+            <pre><code data-trim style="font-size: large;" class="language-python">
+items = stacrs.search(
+    "https://landsatlook.usgs.gov/stac-server",
+    collections="landsat-c2l2-sr",
+    intersects={"type": "Point", "coordinates": [-105.119, 40.173]},
+    sortby="-properties.datetime",
+    max_items=1000,
+)
+stacrs.write("items.parquet", items)
+            </code>
+            </pre>
+            <p>
+              <a href="https://github.com/gadomski/stacrs">gadomski/stacrs</a>
+            </p>
+          </section>
+          <section>
+            <h2>stacrs-cli</h2>
+            <pre>
+            <code style="font-size: large" data-trim class="language-shell">
+              $ python -m pip install stacrs-cli
+              $ stacrs search https://landsatlook.usgs.gov/stac-server/search --max-items 1000 \
+                | stacrs translate - items.parquet
+            </code>
+            </pre>
+            <p>
+              <a href="https://github.com/stac-utils/stac-rs"
+                >stac-utils/stac-rs</a
+              >
+            </p>
+          </section>
+          <section>
+            <h2>stac-fastapi-geoparquet</h2>
+
+            <p>👷‍♂️</p>
+
+            <p>Coming March 2025...</p>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h2>cql2</h2>
+
+            <blockquote
+              class="bluesky-embed"
+              data-bluesky-uri="at://did:plc:gwget3q2rpmjd3pj7h6xloxc/app.bsky.feed.post/3lfbfrtut6s26"
+              data-bluesky-cid="bafyreifwgzj6q6uypb6xizjv3xshgce3qqoxpvwaa7czassyzmb5hwrfum"
+            >
+              <p lang="en">
+                we need more CQL2 STAC examples in the wild, feels very sparse -
+                and not even clear on easy way for a user to know if said API
+                supports CQL2
+              </p>
+              &mdash; Alex (<a
+                href="https://bsky.app/profile/did:plc:gwget3q2rpmjd3pj7h6xloxc?ref_src=embed"
+                >@wildintellect.com</a
+              >)
+              <a
+                href="https://bsky.app/profile/did:plc:gwget3q2rpmjd3pj7h6xloxc/post/3lfbfrtut6s26?ref_src=embed"
+                >January 8, 2025 at 5:19 PM</a
+              >
+            </blockquote>
+            <script
+              async
+              src="https://embed.bsky.app/static/embed.js"
+              charset="utf-8"
+            ></script>
+          </section>
+          <section>
+            <h2>cql2-rs</h2>
+
+            <p>CLI</p>
+            <pre><code data-trim class="language-shell" style="font-size: large;">
+$ echo "(\"landsat:scene_id\" = 'LC82030282019133LGN00')" | cql2 -o json
+{"op":"=","args":[{"property":"landsat:scene_id"},"LC82030282019133LGN00"]}
+            </code></pre>
+
+            <p>Python</p>
+            <pre><code data-trim class="language-python" style="font-size: large;">
+from cql2 import Expr
+
+expr = Expr("landsat:scene_id = 'LC82030282019133LGN00'")
+print(expr.to_json())
+print(expr.to_sql())
+            </code></pre>
+          </section>
+          <section>
+            <h2>Implementations</h2>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>Backend</th>
+                  <th>Supported?</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Postgres (pgstac)</td>
+                  <td>✅</td>
+                </tr>
+                <tr>
+                  <td>Elasticsearch</td>
+                  <td>✅</td>
+                </tr>
+                <tr>
+                  <td>DuckDB</td>
+                  <td>👷</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h2>DuckDB</h2>
+
+            <p>🦆</p>
+          </section>
+          <section>
+            <h2>stacrs (again)</h2>
+
+            <p>CLI</p>
+            <pre>
+            <code style="font-size: large" data-trim class="language-shell">
+              $ stacrs search items.parquet --max-items 1000
+            </code>
+            </pre>
+
+            <p>Python</p>
+
+            <pre>
+            <code style="font-size: large" data-trim class="language-python">
+from stacrs import DuckdbClient
+
+client = DuckdbClient()
+item_collection = client.search("items.parquet", ...)
+            </code>
+            </pre>
+          </section>
+        </section>
+        <section>
+          <h2>STAC API search</h2>
+
+          <p>"Lingua franca"</p>
+
+          <ul>
+            <li>Datetime(s)</li>
+            <li>Geometry (or bbox)</li>
+            <li>cql2</li>
+            <li>sort</li>
+            <li>fields</li>
+          </ul>
+        </section>
+        <section>
+          <section>
+            <h2>Putting it together</h2>
+
+            <img src="img/pepe-silvia.jpg" />
+          </section>
+          <section>
+            <img
+              src="img/putting-it-together.excalidraw.png"
+              class="r-stretch"
+            />
+          </section>
+          <section>
+            <img src="img/libraries.excalidraw.png" class="r-stretch" />
+          </section>
+          <section>
+            <table style="font-size: medium">
+              <thead>
+                <tr>
+                  <th>Repo</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <a href="https://github.com/developmentseed/cql2-rs"
+                      >developmentseed/cql2-rs</a
+                    >
+                  </td>
+                  <td>
+                    Rust library and Python bindings for parsing the OGC CQL2
+                    filter language
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="https://github.com/geoarrow/geoarrow-rs"
+                      >geoarrow/geoarrow-rs</a
+                    >
+                  </td>
+                  <td>
+                    GeoArrow in Rust, Python, and JavaScript (WebAssembly) with
+                    vectorized geometry operations
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <a
+                      href="https://github.com/apache/arrow-rs/tree/main/object_store"
+                      >object_store</a
+                    >
+                  </td>
+                  <td>
+                    A focused, easy to use, idiomatic, high performance, async
+                    object store library for interacting with object stores.
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="https://github.com/stac-utils/stac-rs"
+                      >stac-utils/stac-rs</a
+                    >
+                  </td>
+                  <td>
+                    Tools and libraries for the SpatioTemporal Asset Catalog
+                    (STAC) specification, written in Rust
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="https://github.com/gadomski/stacrs"
+                      >gadomski/stacrs</a
+                    >
+                  </td>
+                  <td>
+                    A small no-dependency Python package for STAC, using Rust
+                    under the hood
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="https://github.com/stac-utils/pgstacrs"
+                      >stac-utils/pgstacrs</a
+                    >
+                  </td>
+                  <td>Python async API for pgstac, backed by Rust</td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="https://github.com/stac-utils/pystac"
+                      >stac-utils/pystac</a
+                    >
+                  </td>
+                  <td>
+                    Python library for working with any SpatioTemporal Asset
+                    Catalog (STAC)
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="https://github.com/stac-utils/pystac-client"
+                      >stac-utils/pystac-client</a
+                    >
+                  </td>
+                  <td>Python client for searching STAC APIs</td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="https://github.com/developmentseed/obstore"
+                      >developmentseed/obstore</a
+                    >
+                  </td>
+                  <td>
+                    The simplest, highest-throughput interface to Amazon S3,
+                    Google Cloud Storage, Azure Storage, and S3-compliant APIs
+                    like Cloudflare R2
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="https://github.com/stac-utils/stac-fastapi-pgstac"
+                      >stac-utils/stac-fastapi-pgstac</a
+                    >
+                  </td>
+                  <td>
+                    PostgreSQL backend for stac-fastapi using pgstac
+                    (https://github.com/stac-utils/pgstac)
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>Rust and Python</h2>
+
+            <p>🐍 🤝 🦀</p>
+          </section>
+          <section>
+            <img src="img/json-hydrate-benchmark.png" class="r-stretch" />
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>Closing thoughts</h2>
+
+            <img src="img/mountain.jpg" class="r-stretch" />
+          </section>
+          <section>
+            <h2>Fin</h2>
+
+            <p>Thank you for your time.</p>
+
+            <img src="img/ferris-holding-stac.png" height="200px" />
+
+            <p style="font-size: large">
+              <a href="https://github.com/gadomski/">Github</a> |
+              <a href="https://bsky.app/profile/gadom.ski">Bluesky</a> |
+              <a href="https://www.gadom.ski/2025-02-05-PangeoShowcase/"
+                >These slides</a
+              >
+            </p>
+          </section>
+        </section>
+      </div>
+    </div>
+
+    <script src="dist/reveal.js"></script>
+    <script src="plugin/notes/notes.js"></script>
+    <script src="plugin/markdown/markdown.js"></script>
+    <script src="plugin/highlight/highlight.js"></script>
+    <script>
+      // More info about initialization & config:
+      // - https://revealjs.com/initialization/
+      // - https://revealjs.com/config/
+      Reveal.initialize({
+        hash: true,
+
+        // Learn about plugins: https://revealjs.com/plugins/
+        plugins: [RevealMarkdown, RevealHighlight, RevealNotes],
+      });
+    </script>
+  </body>
+</html>

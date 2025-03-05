@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+
+    <title>High-performance Python STAC tooling, backed by Rust</title>
+
+    <link rel="stylesheet" href="dist/reset.css" />
+    <link rel="stylesheet" href="dist/reveal.css" />
+    <link rel="stylesheet" href="dist/theme/devseed.css" />
+
+    <!-- Theme used for syntax highlighted code -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css" />
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <h2>some STAC stuff</h2>
+
+          <p>
+            <img src="img/STAC-04.png" height="128px" />
+            <br />
+            🐍 🤝 🦀
+            <br />
+            STAC 🤝❓ Zarr
+          </p>
+        </section>
+        <section>
+          <section>
+            <h2>STAC</h2>
+
+            <img class="r-stretch" src="img/stac-entities.excalidraw.png" />
+          </section>
+          <section>
+            <h2>Usage</h2>
+
+            <img class="r-stretch" src="img/stac-usage.excalidraw.png" />
+          </section>
+          <section>
+            <blockquote>STAC is the map to your data</blockquote>
+            <p style="margin-bottom: 4em">&mdash; Howard Butler</p>
+            <blockquote>STAC's sweet spot is L1 to L2</blockquote>
+            <p>&mdash; me</p>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h2>Python STAC ecosystem</h2>
+          </section>
+          <section>
+            <h2>PySTAC</h2>
+          </section>
+          <section>
+            <h2>pystac-client</h2>
+          </section>
+          <section>
+            <h2>odc-stac and stackstac</h2>
+          </section>
+          <section>
+            <h2>stacrs (rustac)</h2>
+          </section>
+        </section>
+      </div>
+    </div>
+
+    <script src="dist/reveal.js"></script>
+    <script src="plugin/notes/notes.js"></script>
+    <script src="plugin/markdown/markdown.js"></script>
+    <script src="plugin/highlight/highlight.js"></script>
+    <script>
+      // More info about initialization & config:
+      // - https://revealjs.com/initialization/
+      // - https://revealjs.com/config/
+      Reveal.initialize({
+        hash: true,
+
+        // Learn about plugins: https://revealjs.com/plugins/
+        plugins: [RevealMarkdown, RevealHighlight, RevealNotes],
+      });
+    </script>
+  </body>
+</html>

@@ -1,3 +1,4 @@
-# High-performance Python STAC tooling, backed by Rust
+# presentations
 
-Slides for my February 2025 [Pangeo Showcase](https://www.pangeo.io/showcase) presentation.
+My presentations.
+See <https://www.gadom.ski/presentations> for a listing.
