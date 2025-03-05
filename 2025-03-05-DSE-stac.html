@@ -7,7 +7,7 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
 
-    <title>High-performance Python STAC tooling, backed by Rust</title>
+    <title>STAC stuff</title>
 
     <link rel="stylesheet" href="dist/reset.css" />
     <link rel="stylesheet" href="dist/reveal.css" />
@@ -24,15 +24,27 @@
 
           <p>
             <img src="img/STAC-04.png" height="128px" />
-            <br />
-            🐍 🤝 🦀
-            <br />
-            STAC 🤝❓ Zarr
           </p>
+
+          <p style="font-size: medium">Pete Gadomski<br />2025-03-05</p>
         </section>
         <section>
           <section>
             <h2>STAC</h2>
+            <img
+              src="./img/open-specifications.excalidraw.png"
+              class="r-stretch"
+            />
+          </section>
+          <section>
+            <h2>STAC</h2>
+            <img
+              src="./img/open-specifications-expanded.excalidraw.png"
+              class="r-stretch"
+            />
+          </section>
+          <section>
+            <h2>STAC entities</h2>
 
             <img class="r-stretch" src="img/stac-entities.excalidraw.png" />
           </section>
@@ -43,9 +55,52 @@
           </section>
           <section>
             <blockquote>STAC is the map to your data</blockquote>
-            <p style="margin-bottom: 4em">&mdash; Howard Butler</p>
+            <p style="margin-bottom: 3em">&mdash; Howard Butler</p>
             <blockquote>STAC's sweet spot is L1 to L2</blockquote>
             <p>&mdash; me</p>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h2>In the wild</h2>
+          </section>
+          <section>
+            <img src="./img/landsat-stac.png" />
+            <p>
+              <a href="https://landsatlook.usgs.gov/stac-server">Landsat</a>
+            </p>
+          </section>
+          <section>
+            <img src="./img/esa-stac.png" />
+            <p>
+              <a href="https://browser.stac.dataspace.copernicus.eu"
+                >Copernicus</a
+              >
+            </p>
+          </section>
+          <section>
+            <img src="./img/planetary-computer.png" />
+            <p>
+              <a href="https://planetarycomputer.microsoft.com/"
+                >Microsoft Planetary Computer</a
+              >
+            </p>
+          </section>
+          <section>
+            <img src="./img/earth-search.png" />
+            <p>
+              <a href="https://console.earth-search.aws.element84.com/"
+                >AWS Earth Search</a
+              >
+            </p>
+          </section>
+          <section>
+            <img src="./img/umbra-stac.png" />
+            <p>
+              <a href="https://registry.opendata.aws/umbra-open-data/"
+                >Umbra Open Data</a
+              >
+            </p>
           </section>
         </section>
         <section>
@@ -54,16 +109,118 @@
           </section>
           <section>
             <h2>PySTAC</h2>
+
+            <pre><code data-trim data-noescape class="language-python" style="font-size: x-large;">
+              from pystac import Catalog
+
+              root_catalog = Catalog.from_file("./example-catalog/catalog.json")
+
+              collections = list(root_catalog.get_collections())
+              for collection in collections:
+                  print(f"- {collection.id}")
+
+              items = list(root_catalog.get_items(recursive=True))
+              for item in items:
+                  print(f"- {item.id}")
+            </code></pre>
+
+            <p>
+              <a href="https://github.com/stac-utils/pystac"
+                >stac-utils/pystac</a
+              >
+            </p>
           </section>
           <section>
             <h2>pystac-client</h2>
+
+            <pre><code data-trim data-noescape class="language-python" style="font-size: x-large;">
+              from pystac_client import Client
+
+              client = Client.open("https://earth-search.aws.element84.com/v1")
+              search = client.search(
+                  max_items=10,
+                  collections=['sentinel-2-l2a'],
+                  bbox=[-72.5,40.5,-72,41]
+              )
+              for item in search.items():
+                print(item.id)
+            </code></pre>
+
+            <p>
+              <a href="https://github.com/stac-utils/pystac-client"
+                >stac-utils/pystac-client</a
+              >
+            </p>
           </section>
           <section>
             <h2>odc-stac and stackstac</h2>
+
+            <pre><code data-trim data-noescape class="language-python" style="font-size: large;">
+              import odc.stac
+
+              catalog = pystac_client.Client.open(...)
+              query = catalog.search(...)
+              xx = odc.stac.load(...)
+            </code></pre>
+
+            <pre><code data-trim data-noescape class="language-python" style="font-size: large;">
+              import stackstac
+
+              catalog = pystac_client.Client.open(...)
+              items = catalog.search(...).item_collection()
+              stack = stackstac.stack(items)
+            </code></pre>
+            <p>
+              <a href="https://github.com/opendatacube/odc-stac"
+                >opendatacube/odc-stac</a
+              >
+              <br />
+              <a href="https://github.com/gjoseph92/stackstac"
+                >gjoseph92/stackstac</a
+              >
+            </p>
           </section>
           <section>
-            <h2>stacrs (rustac)</h2>
+            <h2>stacrs (🤫 rustac)</h2>
+
+            <pre><code data-trim data-noescape class="language-python" style="font-size: x-large;">
+              import stacrs  # soon to be import rustac
+              from geopandas import GeoDataFrame
+
+              table = await stacrs.search_to_arrow(...)
+              data_frame = GeoDataFrame.from_arrow(table)
+              items = stacrs.from_arrow(data_frame.to_arrow())
+
+              item_collection = await stacrs.search("s3://bucket/items.parquet", ...)
+            </code></pre>
+            <p>
+              <a href="https://github.com/stac-utils/stacrs"
+                >stac-utils/stacrs</a
+              >
+            </p>
           </section>
+        </section>
+        <section>
+          <h2>Looking forward</h2>
+
+          <img src="./img/mountain.jpg" class="r-stretch" />
+        </section>
+        <section>
+          <h2>Fin</h2>
+
+          <p>Thank you for your time</p>
+
+          <ul style="font-size: x-large">
+            <li>
+              <a
+                href="https://www.gadom.ski/presentations/2025-03-05-DSE-stac.html"
+                >slides</a
+              >
+            </li>
+            <li>
+              <a href="https://github.com/gadomski/presentations">repo</a>
+            </li>
+          </ul>
         </section>
       </div>
     </div>
