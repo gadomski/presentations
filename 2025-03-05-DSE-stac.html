@@ -65,13 +65,13 @@
             <h2>In the wild</h2>
           </section>
           <section>
-            <img src="./img/landsat-stac.png" />
+            <img src="./img/landsat-stac.png" class="r-stretch" />
             <p>
               <a href="https://landsatlook.usgs.gov/stac-server">Landsat</a>
             </p>
           </section>
           <section>
-            <img src="./img/esa-stac.png" />
+            <img src="./img/esa-stac.png" class="r-stretch" />
             <p>
               <a href="https://browser.stac.dataspace.copernicus.eu"
                 >Copernicus</a
@@ -79,7 +79,7 @@
             </p>
           </section>
           <section>
-            <img src="./img/planetary-computer.png" />
+            <img src="./img/planetary-computer.png" class="r-stretch" />
             <p>
               <a href="https://planetarycomputer.microsoft.com/"
                 >Microsoft Planetary Computer</a
@@ -87,7 +87,7 @@
             </p>
           </section>
           <section>
-            <img src="./img/earth-search.png" />
+            <img src="./img/earth-search.png" class="r-stretch" />
             <p>
               <a href="https://console.earth-search.aws.element84.com/"
                 >AWS Earth Search</a
@@ -95,10 +95,21 @@
             </p>
           </section>
           <section>
-            <img src="./img/umbra-stac.png" />
+            <img src="./img/umbra-stac.png" class="r-stretch" />
             <p>
               <a href="https://registry.opendata.aws/umbra-open-data/"
                 >Umbra Open Data</a
+              >
+            </p>
+          </section>
+          <section>
+            <h2>VEDA notebooks</h2>
+
+            <img src="./img/veda-notebook.png" class="r-stretch" />
+            <p>
+              <a
+                href="https://docs.openveda.cloud/user-guide/notebooks/datasets/ocean-npp-timeseries-analysis.html"
+                >open</a
               >
             </p>
           </section>
@@ -199,6 +210,27 @@
               >
             </p>
           </section>
+        </section>
+        <section>
+          <h2>rstac</h2>
+
+          <pre><code data-trim data-noescape class="language-r" style="font-size: x-large;">
+            nasa_stac <- stac("https://cmr.earthdata.nasa.gov/stac/LPCLOUD")
+            bbox = c( -123.824405, 39.485343, -123.748531, 39.556319)
+            extent = ext(c(bbox[1],bbox[3],bbox[2],bbox[4]))
+            search_hls <- stac_search(
+              q = nasa_stac, # The STAC API connection we made earlier
+              collections = "HLSS30.v2.0", # https://lpdaac.usgs.gov/products/hlss30v002/
+              bbox = bbox, #bounding box that we made eariler
+              datetime = "2023-06-01T00:00:00Z/2023-07-30T00:00:00Z",  # A closed interval: e.g. "2018-02-12T00:00:00Z/2018-03-18T12:31:12Z" 
+              limit = 100 #limits how many results we see
+            )
+          </code></pre>
+          <p>
+            <a href="https://github.com/brazil-data-cube/rstac"
+              >brazil-data-cube/rstac</a
+            >
+          </p>
         </section>
         <section>
           <h2>Looking forward</h2>
