@@ -22,24 +22,26 @@
         <section>
           <h2>Right-sizing STAC</h2>
 
-          <p
-            style="display: flex; justify-content: center; align-items: center"
-          >
-            <img src="img/STAC-04.png" height="64px" />
-            <img src="img/STAC-04.png" height="128px" />
-            <img src="img/STAC-04.png" height="256px" />
-          </p>
+          <img src="img/three-bears-with-stac.png" class="r-stretch" />
 
           <p style="font-size: x-large">Pete Gadomski<br />2025-04-30</p>
+
+          <p style="font-size: small">
+            Three bears image:
+            <a
+              href="https://commons.wikimedia.org/wiki/File:Page_96_illustration_in_English_Fairy_Tales.png"
+              >John D. Batten</a
+            >, Public domain, via Wikimedia Commons
+          </p>
         </section>
         <section>
           <section>
             <blockquote>STAC is the map to your data.</blockquote>
             <p>&mdash; Howard Butler</p>
           </section>
-          <section>
+          <!-- <section>
             <img src="img/stac-entities.excalidraw.png" class="r-stretch" />
-          </section>
+          </section> -->
           <section>
             <img src="img/stac-usage.excalidraw.png" class="r-stretch" />
           </section>
@@ -58,9 +60,29 @@
         </section>
         <section>
           <section>
+            <h2>STAC in action</h2>
+
+            <img src="img/stac-supporters.png" class="r-stretch" />
+          </section>
+          <section>
+            <img src="img/Scotiapiper-annotated.jpg" class="r-stretch" />
+
+            <p style="font-size: small">
+              Annotated version created from
+              <a href="https://commons.wikimedia.org/wiki/File:Scotiapiper.jpg"
+                >William S Bruce 1867-1921</a
+              >, Public domain, via Wikimedia Commons
+            </p>
+          </section>
+          <section>
             <blockquote>
               Cloud-Native Geospatial <strong>metadata</strong>
             </blockquote>
+
+            <img
+              src="img/cloud-native-geospatial-metadata.excalidraw.png"
+              class="r-stretch"
+            />
           </section>
           <section>
             <h2>
@@ -117,11 +139,25 @@
             <h2><a href="https://duckdb.org/">DuckDB</a></h2>
 
             <p>🦆</p>
+
+            <pre
+              style="font-size: small"
+            ><code>D select count(*) from read_parquet('s3://stac-fastapi-geoparquet-labs-375/sentinel-2-l2a.parquet/*.parquet');
+┌────────────────┐
+│  count_star()  │
+│     int64      │
+├────────────────┤
+│    2195487     │
+│ (2.20 million) │
+└────────────────┘
+Run Time (s): real 1.971 user 0.467172 sys 0.545317</code></pre>
           </section>
         </section>
         <section>
           <section>
             <h2>Experiments</h2>
+
+            <img src="img/labs-375-experiment-architecture.excalidraw.png" />
           </section>
           <section>
             <h2>Datasets</h2>
@@ -129,16 +165,90 @@
             <table style="font-size: xx-large">
               <thead>
                 <tr>
-                  <th>Name</th>
+                  <th>ID</th>
                   <th>Number of items</th>
                   <th>Spatial properties</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>NAIP (over Colorado)</td>
-                  <th></th>
-                  <th></th>
+                  <td>naip</td>
+                  <td>10k</td>
+                  <td>Full coverage of Colorado</td>
+                </tr>
+                <tr>
+                  <td>openaerialmap</td>
+                  <td>13.5k</td>
+                  <td>Global, sparse</td>
+                </tr>
+                <tr>
+                  <td>sentinel-2-l2a</td>
+                  <td>2.20 million</td>
+                  <td>Global, dense</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <img src="img/labs-375-datasets.png" class="r-stretch" />
+          </section>
+          <section>
+            <h2>Are larger pages faster?</h2>
+            <img src="img/labs-375-single-search.png" class="r-stretch" />
+          </section>
+          <section>
+            <h2>Only fetching some fields</h2>
+            <img src="img/labs-375-fields.png" class="r-stretch" />
+          </section>
+          <section>
+            <h2>Searching by attributes</h2>
+            <img
+              src="img/labs-375-searching-attributes.png"
+              class="r-stretch"
+            />
+          </section>
+          <section>
+            <h3>Searching by attributes on 2.2 million</h3>
+
+            <pre
+              style="font-size: small"
+            ><code>$ curl https://stac-geoparquet.labs.eoapi.dev/collections/sentinel-2-l2a/items/S2A_MSIL2A_20240101T104521_R065_T30KTG_20240101T142405
+{"message":"Service Unavailable"}</code></pre>
+
+            <p>💥</p>
+
+            <p style="font-size: large">Where's the breakpoint? 20k? 30k?</p>
+          </section>
+          <section>
+            <h2>Costs</h2>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>Service</th>
+                  <th>Cost</th>
+                  <th>Notes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Relational Database Service</td>
+                  <td>$2.42</td>
+                  <td>db.t3.micro</td>
+                </tr>
+                <tr>
+                  <td>EC2-Instances</td>
+                  <td>$1.33</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>Lambda</td>
+                  <td>$0.09</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>S3</td>
+                  <td>$0.01</td>
+                  <td></td>
                 </tr>
               </tbody>
             </table>
@@ -165,6 +275,14 @@
         <section>
           <section>
             <h2>Open questions</h2>
+          </section>
+          <section>
+            <h2>What's the breakpoint?</h2>
+
+            <ul>
+              <li>Size</li>
+              <li>Use-case</li>
+            </ul>
           </section>
           <section>
             <img
