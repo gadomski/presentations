@@ -75,9 +75,7 @@
             </p>
           </section>
           <section>
-            <blockquote>
-              Cloud-Native Geospatial <strong>metadata</strong>
-            </blockquote>
+            <h2>Cloud-Native Geospatial <strong>metadata</strong></h2>
 
             <img
               src="img/cloud-native-geospatial-metadata.excalidraw.png"
@@ -162,11 +160,12 @@ Run Time (s): real 1.971 user 0.467172 sys 0.545317</code></pre>
           <section>
             <h2>Datasets</h2>
 
-            <table style="font-size: xx-large">
+            <table style="font-size: x-large">
               <thead>
                 <tr>
                   <th>ID</th>
                   <th>Number of items</th>
+                  <th>Size</th>
                   <th>Spatial properties</th>
                 </tr>
               </thead>
@@ -174,17 +173,20 @@ Run Time (s): real 1.971 user 0.467172 sys 0.545317</code></pre>
                 <tr>
                   <td>naip</td>
                   <td>10k</td>
-                  <td>Full coverage of Colorado</td>
-                </tr>
-                <tr>
-                  <td>openaerialmap</td>
-                  <td>13.5k</td>
-                  <td>Global, sparse</td>
+                  <td>1.8M</td>
+                  <td>Colorado, dense</td>
                 </tr>
                 <tr>
                   <td>sentinel-2-l2a</td>
                   <td>2.20 million</td>
+                  <td>2.4G</td>
                   <td>Global, dense</td>
+                </tr>
+                <tr>
+                  <td>openaerialmap</td>
+                  <td>13.5k</td>
+                  <td>12M</td>
+                  <td>Global, sparse</td>
                 </tr>
               </tbody>
             </table>
@@ -221,7 +223,11 @@ Run Time (s): real 1.971 user 0.467172 sys 0.545317</code></pre>
           <section>
             <h2>Costs</h2>
 
-            <table>
+            <p style="font-size: large">
+              During the one week while we ran experiments
+            </p>
+
+            <table style="font-size: x-large">
               <thead>
                 <tr>
                   <th>Service</th>
@@ -233,22 +239,22 @@ Run Time (s): real 1.971 user 0.467172 sys 0.545317</code></pre>
                 <tr>
                   <td>Relational Database Service</td>
                   <td>$2.42</td>
-                  <td>db.t3.micro</td>
+                  <td>db.t3.micro, pgstac only</td>
                 </tr>
                 <tr>
                   <td>EC2-Instances</td>
                   <td>$1.33</td>
-                  <td></td>
+                  <td>pgstac only</td>
                 </tr>
                 <tr>
                   <td>Lambda</td>
                   <td>$0.09</td>
-                  <td></td>
+                  <td>Shared between pgstac and geoparquet</td>
                 </tr>
                 <tr>
                   <td>S3</td>
                   <td>$0.01</td>
-                  <td></td>
+                  <td>geoparquet only</td>
                 </tr>
               </tbody>
             </table>
@@ -256,40 +262,124 @@ Run Time (s): real 1.971 user 0.467172 sys 0.545317</code></pre>
         </section>
         <section>
           <section>
-            <h2>Software</h2>
-          </section>
-          <section>
-            <h2>
-              <a href="https://github.com/stac-utils/stac-fastapi-geoparquet/"
-                >stac-fastapi-geoparquet</a
-              >
-            </h2>
-          </section>
-          <section>
-            <h2>
-              <a href="https://github.com/stac-utils/rustac/">rustac</a>
-            </h2>
-            <img src="img/rustac.png" height="200" />
-          </section>
-        </section>
-        <section>
-          <section>
             <h2>Open questions</h2>
           </section>
           <section>
-            <h2>What's the breakpoint?</h2>
+            <h2>When is</h2>
+            <h2>stac-fastapi-geoparquet</h2>
+            <h2>the wrong answer?</h2>
 
             <ul>
-              <li>Size</li>
-              <li>Use-case</li>
+              <li class="fragment">
+                Lots of items (what is the breakpoint? 30k?)
+              </li>
+              <li class="fragment">Low latency needle-in-haystack</li>
+              <li class="fragment">You already have a database</li>
             </ul>
           </section>
           <section>
+            <h2>Should we scale?</h2>
+
+            <p>
+              We could engineer solutions to raise that "max number of items"
+              ceiling, but at what point are we re-creating a database system?
+            </p>
+          </section>
+          <section>
+            <h2>Appends?</h2>
+
+            <p>🥾 🥫</p>
+
+            <pre
+              style="font-size: medium"
+            ><code class="language-shell">$ rustac translate data/openaerialmap.parquet | jq '.features | length'
+13500
+$ time rustac translate data/openaerialmap.parquet out.parquet
+rustac translate data/openaerialmap.parquet out.parquet  0.68s user 0.09s system 97% cpu 0.793 total</code></pre>
+          </section>
+          <section>
+            <h2>Specifications?</h2>
             <img
               src="img/stac-geoparquet-and-geojson.excalidraw.png"
               class="r-stretch"
             />
           </section>
+        </section>
+        <section>
+          <section>
+            <h2>Software</h2>
+
+            <img
+              src="./img/stac-fastapi-geoparquet-software.excalidraw.png"
+              class="r-stretch"
+            />
+          </section>
+          <section>
+            <h2>
+              <a href="https://github.com/stac-utils/rustac/">rustac</a>
+            </h2>
+            <p>née <strong>stac-rs</strong>/<strong>stacrs</strong></p>
+            <img src="img/rustac.png" height="200" />
+
+            <p style="font-size: medium">
+              🫡 <a href="https://github.com/jkeifer">Jarrett Keifer</a>,
+              <a href="https://github.com/parksjr">Mike Parks</a>, and Rob Gomez
+              of <a href="https://element84.com/">Element 84</a> for the logo.
+            </p>
+          </section>
+        </section>
+        <section>
+          <h2>Looking forward</h2>
+
+          <img src="./img/mountain.jpg" class="r-stretch" />
+
+          <ul style="font-size: x-large">
+            <li><strong>stac-geoparquet</strong> spec release</li>
+            <li>Consolidate <strong> stac-geoparquet</strong> tooling</li>
+            <li>
+              Actually Use™ <strong> stac-fastapi-geoparquet</strong> for a
+              real-world problem
+            </li>
+            <li><strong>rustac</strong> API iterations and improvements</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Fin</h2>
+
+          <p>
+            Thank you for your time (<a
+              href="https://www.gadom.ski/presentations/2025-04-30-CNG.html"
+              >slides</a
+            >,
+            <a
+              href="https://github.com/developmentseed/labs-375-stac-geoparquet-backend"
+              >labs repo</a
+            >)
+          </p>
+
+          <p style="font-size: medium">
+            Thank you to
+            <a href="https://github.com/zacdezgeo">Zac Deziel</a>,
+            <a href="https://github.com/kylebarron">Kyle Barron</a>,
+            <a href="https://github.com/bitner">David Bitner</a>,
+            <a href="https://github.com/hrodmn">Henry Rodman</a>,
+            <a href="https://github.com/ceholden">Chris Holden</a>,
+            <a href="https://github.com/vincentsarago/">Vincent Sarago</a>,
+            <a href="https://github.com/alukach/">Anthony Lukach</a>, and many
+            others for the help on the lab, and to
+            <a href="https://github.com/developmentseed/">Development Seed</a>
+            for setting aside company time for experiments like these.
+          </p>
+
+          <img src="./img/three-bears-with-stac.png" class="r-stretch" />
+
+          <p style="font-size: small">
+            Three bears image:
+            <a
+              href="https://commons.wikimedia.org/wiki/File:Page_96_illustration_in_English_Fairy_Tales.png"
+              >John D. Batten</a
+            >, Public domain, via Wikimedia Commons
+          </p>
         </section>
       </div>
     </div>
