@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+
+    <title>stac-geoparquet</title>
+
+    <link rel="stylesheet" href="dist/reset.css" />
+    <link rel="stylesheet" href="dist/reveal.css" />
+    <link rel="stylesheet" href="dist/theme/devseed.css" />
+
+    <!-- Theme used for syntax highlighted code -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css" />
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <h1>stac-geoparquet</h1>
+
+          <p style="font-size: xx-large">Pete Gadomski<br />2025-06-06</p>
+        </section>
+
+        <section>
+          <section>
+            <h1>What the STAC?</h1>
+            <blockquote>STAC is the map to your data.</blockquote>
+            <p>&mdash; Howard Butler</p>
+            <img src="img/stac-is-a-map.excalidraw.png" class="r-stretch" />
+          </section>
+          <section>
+            <h1>STAC-as-a-service</h1>
+
+            <img src="img/mapquest.excalidraw.png" class="r-stretch" />
+          </section>
+          <section>
+            <h1>STAC-as-data</h1>
+
+            <img src="img/d-day.jpg" class="r-stretch" />
+
+            <p style="font-size: small">
+              <a
+                href="https://commons.wikimedia.org/wiki/File:Holland_Smith_looking_at_D-Day_Maps_for_Saipan,_15_June_1944_(48298986566).jpg"
+                >USMC Archives from Quantico, USA</a
+              >,
+              <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a
+              >, via Wikimedia Commons
+            </p>
+          </section>
+          <section>
+            <img src="img/cloud-native.excalidraw.png" class="r-stretch" />
+          </section>
+        </section>
+        <section>
+          <section>
+            <img src="img/stac-geoparquet.excalidraw.png" class="r-stretch" />
+          </section>
+          <section>
+            <img src="img/stac-data-storage.excalidraw.png" class="r-stretch" />
+          </section>
+        </section>
+        <section>
+          <section>
+            <h1>How do?</h1>
+
+            <pre><code class="language-shell">$ python -m pip install stac-geoparquet</code></pre>
+
+            <pre><code style="font-size: large;" class="language-python" data-trim>
+import stac_geoparquet.arrow
+import pyarrow.parquet
+
+infile = "items.ndjson"
+outfile = "items.parquet"
+
+stac_geoparquet.arrow.parse_stac_ndjson_to_parquet(infile, outfile)
+table = pyarrow.parquet.read_table(outfile)
+items = stac_geoparquet.arrow.stac_table_to_items(table)
+</code></pre>
+          </section>
+          <section>
+            <h1>How do?</h1>
+
+            <pre><code class="language-shell">$ python -m pip install rustac</code></pre>
+
+            <pre><code style="font-size: large;" class="language-python" data-trim>
+import rustac
+
+infile = "items.ndjson"
+outfile = "items.parquet"
+
+items = await rustac.read(infile)
+await rustac.write(outfile)
+items = await rustac.read(outfile)
+</code></pre>
+
+            <pre><code class="language-shell">$ rustac translate items.ndjson items.parquet</code></pre>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h1>What do?</h1>
+
+            <pre><code class="language-shell" style="font-size: small; line-height: 1;">$ gpq describe items.parquet
+╭────────────────────┬────────┬─────────────────────────────────────────────────────────────────────────────── ≈
+│ COLUMN             │ TYPE   │ ANNOTATION                                                                     ≈
+├────────────────────┼────────┼─────────────────────────────────────────────────────────────────────────────── ≈
+│ stac_version       │ binary │ string                                                                         ≈
+│ stac_extensions    │        │ list                                                                           ≈
+│ id                 │ binary │ string                                                                         ≈
+│ instruments        │        │ list                                                                           ≈
+│ license            │ binary │ string                                                                         ≈
+│ links              │        │ list                                                                           ≈
+│ assets             │        │ group                                                                          ≈
+│ collection         │ int32  │ null                                                                           ≈
+│ datetime           │ int64  │ timestamp(isadjustedtoutc=true, timeunit=milliseconds, is_from_converted_type= ≈
+│ start_datetime     │ int64  │ timestamp(isadjustedtoutc=true, timeunit=milliseconds, is_from_converted_type= ≈
+│ end_datetime       │ int64  │ timestamp(isadjustedtoutc=true, timeunit=milliseconds, is_from_converted_type= ≈
+│ title              │ binary │ string                                                                         ≈
+│ created            │ int64  │ timestamp(isadjustedtoutc=true, timeunit=milliseconds, is_from_converted_type= ≈
+│ oam:producer_name  │ binary │ string                                                                         ≈
+│ oam:platform_type  │ binary │ string                                                                         ≈
+│ gsd                │ double │                                                                                ≈
+│ providers          │        │ list                                                                           ≈
+│ bbox               │        │ group                                                                          ≈
+│ geometry           │ binary │                                                                                ≈
+│                    │        │                                                                                ≈
+├────────────────────┼────────┴─────────────────────────────────────────────────────────────────────────────── ≈
+│ Rows               │ 17669                                                                                   ≈
+│ Row Groups         │ 1                                                                                       ≈
+│ GeoParquet Version │ 1.1.0                                                                                   ≈
+╰────────────────────┴──────────────────────────────────────────────────────────────────────────────────────── ≈
+            </code></pre>
+          </section>
+          <section>
+            <h2>stac-geoparquet-viewer</h2>
+
+            <p>TODO</p>
+          </section>
+          <section>
+            <h2>stac-geoparquet-pmtiles</h2>
+
+            <img src="img/stac-geoparquet-pmtiles.gif" class="r-stretch" />
+
+            <p style="font-size: large">
+              <a href="https://github.com/gadomski/stac-geoparquet-pmtiles/"
+                >https://github.com/gadomski/stac-geoparquet-pmtiles/</a
+              >
+            </p>
+          </section>
+        </section>
+        <section>
+          <h1>Querying</h1>
+        </section>
+      </div>
+    </div>
+
+    <script src="dist/reveal.js"></script>
+    <script src="plugin/notes/notes.js"></script>
+    <script src="plugin/markdown/markdown.js"></script>
+    <script src="plugin/highlight/highlight.js"></script>
+    <script>
+      // More info about initialization & config:
+      // - https://revealjs.com/initialization/
+      // - https://revealjs.com/config/
+      Reveal.initialize({
+        hash: true,
+
+        // Learn about plugins: https://revealjs.com/plugins/
+        plugins: [RevealMarkdown, RevealHighlight, RevealNotes],
+      });
+    </script>
+  </body>
+</html>
