@@ -57,6 +57,7 @@
         </section>
         <section>
           <section>
+            <h1>stac-geoparquet</h1>
             <img src="img/stac-geoparquet.excalidraw.png" class="r-stretch" />
           </section>
           <section>
@@ -153,7 +154,177 @@ items = await rustac.read(outfile)
           </section>
         </section>
         <section>
-          <h1>Querying</h1>
+          <section>
+            <h2>Why do?</h2>
+
+            <img
+              src="img/geoparquet-size-chart.excalidraw.png"
+              class="r-stretch"
+            />
+
+            <table style="font-size: large">
+              <thead>
+                <tr>
+                  <th>Format</th>
+                  <th>Size</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>json</td>
+                  <td>21 MB</td>
+                </tr>
+                <tr>
+                  <td>json.gz</td>
+                  <td>614 kB</td>
+                </tr>
+                <tr>
+                  <td>parquet</td>
+                  <td>488 kB</td>
+                </tr>
+                <tr>
+                  <td>parquet (compressed)</td>
+                  <td>179 kB</td>
+                </tr>
+              </tbody>
+            </table>
+            <p style="font-size: large">1000 sentinel-2 items</p>
+          </section>
+          <section>
+            <h1>duckdb 🦆</h1>
+
+            <pre><code data-trim class="language-sql" style="font-size: medium; line-height: 1;">
+D select count(*)
+  from read_parquet('s3://stac-fastapi-geoparquet-labs-375/its-live-partitioned/**/*.parquet');
+┌────────────────┐
+│  count_star()  │
+│     int64      │
+├────────────────┤
+│    9907260     │
+│ (9.91 million) │
+└────────────────┘
+            </code></pre>
+            <pre><code data-trim class="language-sql" style="font-size: medium; line-height: 1;">
+D select count(*)
+  from read_parquet('s3://stac-fastapi-geoparquet-labs-375/its-live-partitioned/**/*.parquet')
+  where percent_valid_pixels=100;
+┌──────────────┐
+│ count_star() │
+│    int64     │
+├──────────────┤
+│    39696     │
+└──────────────┘
+            </code></pre>
+          </section>
+          <section>
+            <h1>STAC API search</h1>
+
+            <pre><code data-trim class="language-python" style="font-size: large;">
+import cql2
+import rustac
+
+href = "s3://stac-fastapi-geoparquet-labs-375/its-live-partitioned/**/*.parquet"
+cql2_json = cql2.parse_text("percent_valid_pixels=100").to_json()
+items = await rustac.search(href, filter=cql2_json)
+            </code></pre>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h2>stac-fastapi-geoparquet</h2>
+            <img
+              src="img/stac-fastapi-geoparquet.excalidraw.png"
+              class="r-stretch"
+            />
+
+            <p style="font-size: large">
+              <a
+                href="https://github.com/developmentseed/labs-375-stac-geoparquet-backend/"
+                >developmentseed/labs-375-stac-geoparquet-backend</a
+              >
+            </p>
+          </section>
+          <section>
+            <h2>Search performance</h2>
+            <img src="img/labs-375-single-search.png" class="r-stretch" />
+          </section>
+          <section>
+            <h2>Needle in a haystack</h2>
+            <img
+              src="img/labs-375-searching-attributes.png"
+              class="r-stretch"
+            />
+
+            <p>* worse for larger datasets</p>
+          </section>
+          <section>
+            <h1>Software</h1>
+            <img
+              src="img/stac-fastapi-geoparquet-software.excalidraw.png"
+              class="r-stretch"
+            />
+          </section>
+        </section>
+        <section>
+          <section>
+            <h1>How scale?</h1>
+
+            <p>🦆</p>
+
+            <pre><code data-trim class="language-sql" style="font-size: medium;">
+copy 
+  (select *, year(datetime) as year from read_parquet('source/**/*.parquet', union_by_name=true))
+to 
+  'destination' (format parquet, partition_by (year), overwrite_or_ignore);
+          </code></pre>
+
+            <p>
+              <a
+                href="https://stac-utils.github.io/rustac-py/latest/notebooks/its-live/"
+                >ITS_LIVE case study</a
+              >
+            </p>
+          </section>
+          <section>
+            <h2>data lakes</h2>
+
+            <ul>
+              <li><a href="https://iceberg.apache.org/">iceberg</a></li>
+              <li><a href="https://delta.io/">delta lake</a></li>
+              <li>
+                <a href="https://ducklake.select/manifesto/"
+                  >ducklake</a
+                >
+              </li>
+              <li>...</li>
+            </ul>
+          </section>
+        </section>
+        <section>
+          <h2>Looking forward</h2>
+
+          <img src="img/mountain.jpg" class="r-stretch" />
+
+          <p>
+          <ul style="font-size: x-large">
+            <li>spec release</li>
+            <li>stac-geoparquet-visualizer</li>
+            <li>appends</li>
+            <li>production</li>
+          </ul>
+          </p>
+        </section>
+        <section>
+          <h2>Fin</h2>
+
+          <p>Thank you for your time</p>
+
+          <p style="font-size: large">
+            <a
+              href="https://www.gadom.ski/presentations/2025-06-06-stac-geoparquet.html"
+              >https://www.gadom.ski/presentations/2025-06-06-stac-geoparquet.html</a
+            >
+          </p>
         </section>
       </div>
     </div>
