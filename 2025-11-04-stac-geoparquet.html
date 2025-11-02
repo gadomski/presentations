@@ -12,9 +12,28 @@
         <link rel="stylesheet" href="dist/reset.css" />
         <link rel="stylesheet" href="dist/reveal.css" />
         <link rel="stylesheet" href="dist/theme/devseed.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap"
+            rel="stylesheet"
+        />
 
         <!-- Theme used for syntax highlighted code -->
         <link rel="stylesheet" href="plugin/highlight/monokai.css" />
+
+        <style>
+            h3.handwriting,
+            p.handwriting {
+                font-family: "Shadows Into Light", cursive;
+                font-weight: bold;
+                font-style: normal;
+                color: #d04200;
+            }
+            .reveal .mermaid {
+                box-shadow: none;
+            }
+        </style>
     </head>
     <body>
         <div class="reveal">
@@ -24,40 +43,71 @@
                         Cloud-Native Geospatial Metadata with stac-geoparquet
                     </h2>
 
-                    <img src="img/stac-geoparquet.png" height="200" />
+                    <h3 class="handwriting">a.k.a. "Pragmatic STAC"</h3>
 
                     <p style="font-size: xx-large">Pete Gadomski</p>
                 </section>
 
                 <section>
                     <section>
-                        <h2>Cloud-native</h2>
+                        <h2>A brief STAC history</h2>
+
+                        <pre class="mermaid r-stretch">
+                            ---
+                            config:
+                                theme: neutral
+                                look: handdrawn
+                            ---
+                            timeline
+                                2017 : Initial commit to what became the stac-spec repository
+                                     : Sprint 1 (Boulder)
+                                     : v0.1.0
+                                2018 : Name changed to STAC
+                                     : Sprints 2 (Ft. Collins) and 3 (Menlo Park)
+                                     : v0.4.0 to v0.6.0
+                                2019 : Sprint 4 and 5 (Arlington)
+                                     : v0.7.0 to v0.8.0
+                                2020 : Sprint 6 (Virtual)
+                                     : v0.9.0
+                                2021 : v1.0.0
+                                2023 : Sprint 7 (Philadelphia)
+                                     : API v1.0.0
+                                2024 : v1.1.0
+                                2025 : Sprint 8 (Italy)
+                                     : OGC Community Standard
+                        </pre>
+
+                        <p style="font-size: large">
+                            Cribbed heavily from
+                            <a
+                                href="https://element84.com/geospatial/stac-a-retrospective-part-1/"
+                                >https://element84.com/geospatial/stac-a-retrospective-part-1/</a
+                            >
+                        </p>
+                    </section>
+                    <section>
+                        <h2>Why did STAC work?</h2>
 
                         <img
-                            src="img/cloud-native.excalidraw.png"
+                            src="img/open-specifications-expanded.excalidraw.png"
                             class="r-stretch"
                         />
 
-                        <p>Data should be useful at rest</p>
+                        <p style="font-size: large">
+                            For more, see
+                            <a
+                                href="https://element84.com/software-engineering/stac-a-retrospective-part-2-why-stac-was-successful/"
+                            >
+                                https://element84.com/software-engineering/stac-a-retrospective-part-2-why-stac-was-successful/
+                            </a>
+                        </p>
                     </section>
-
-                    <section>
-                        <h2>Cloud-native data</h2>
-
-                        <img
-                            src="img/cloud-native-data-formats.excalidraw.png"
-                            class="r-stretch"
-                        />
-                    </section>
-
-                    <section>
-                        <h2>Cloud-native <u>META</u>data</h2>
-                    </section>
-                </section>
-
-                <section>
                     <section>
                         <h2>What the STAC?</h2>
+                        <img
+                            src="img/what-the-stac.excalidraw.png"
+                            class="r-stretch"
+                        />
 
                         <div style="font-size: xx-large">
                             <blockquote>
@@ -65,13 +115,9 @@
                             </blockquote>
                             <p>&mdash; Howard Butler</p>
                         </div>
-                        <img
-                            src="img/what-the-stac.excalidraw.png"
-                            class="r-stretch"
-                        />
                     </section>
                     <section>
-                        <h2>STAC basics</h2>
+                        <h2>STAC entities</h2>
 
                         <img
                             src="img/stac-entities.excalidraw.png"
@@ -86,6 +132,8 @@
                             class="r-stretch"
                         />
                     </section>
+                </section>
+                <section>
                     <section>
                         <h2>Uses of STAC</h2>
 
@@ -93,6 +141,163 @@
                             src="img/uses-of-stac.excalidraw.png"
                             class="r-stretch"
                         />
+
+                        <p class="handwriting" style="font-size: xx-large">
+                            These are very much Pete's opinions, based on his
+                            experience. Your mileage will almost certainly vary.
+                        </p>
+                    </section>
+                    <section>
+                        <h2>Uses of STAC: search</h2>
+
+                        <blockquote style="font-size: x-large">
+                            I need all Landsat images with cloud cover less than
+                            20% over Summit County, Colorado in 2025 for a snow
+                            distribution research project
+                        </blockquote>
+
+                        <table style="font-size: x-large">
+                            <thead>
+                                <tr>
+                                    <th>Mode</th>
+                                    <th>Explanation</th>
+                                    <th>Rating</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Static</td>
+                                    <td>
+                                        The user must read every JSON blob and
+                                        compare it to the search criteria
+                                    </td>
+                                    <td>❌</td>
+                                </tr>
+                                <tr>
+                                    <td>API</td>
+                                    <td>
+                                        Databases and other data stores usually
+                                        have indexes on commonly-searched
+                                        properties, including datetime and
+                                        geometry
+                                    </td>
+                                    <td>✅</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                    <section>
+                        <h2>Uses of STAC: full scan</h2>
+
+                        <blockquote style="font-size: x-large">
+                            I need every NAIP image to train a model.
+                        </blockquote>
+
+                        <table style="font-size: x-large">
+                            <thead>
+                                <tr>
+                                    <th>Mode</th>
+                                    <th>Explanation</th>
+                                    <th>Rating</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Static</td>
+                                    <td>
+                                        The user must read every JSON blob, but
+                                        blob storage is pretty good at this.
+                                    </td>
+                                    <td>⚠️</td>
+                                </tr>
+                                <tr>
+                                    <td>API</td>
+                                    <td>
+                                        Paging through API calls takes a lot of
+                                        time, and full scans often get throttled
+                                        or otherwise error.
+                                    </td>
+                                    <td>⚠️</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                    <section>
+                        <h2>Uses of STAC: ingest</h2>
+
+                        <blockquote style="font-size: x-large">
+                            I need to update my data store each day with a new
+                            analytic product
+                        </blockquote>
+
+                        <table style="font-size: x-large">
+                            <thead>
+                                <tr>
+                                    <th>Mode</th>
+                                    <th>Explanation</th>
+                                    <th>Rating</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Static</td>
+                                    <td>
+                                        Adding a new JSON file to blob storage
+                                        is trivially easy, as is updating its
+                                        parent collection
+                                    </td>
+                                    <td>✅</td>
+                                </tr>
+                                <tr>
+                                    <td>API</td>
+                                    <td>
+                                        Ingestion pipelines into databases or
+                                        other document stores are often bespoke
+                                        and complex
+                                    </td>
+                                    <td>⚠️</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                    <section>
+                        <h2>Uses of STAC: near real-time</h2>
+
+                        <blockquote style="font-size: x-large">
+                            I need to be notified as soon as a new weather
+                            forecast is available, so I can update my market
+                            model
+                        </blockquote>
+
+                        <table style="font-size: x-large">
+                            <thead>
+                                <tr>
+                                    <th>Mode</th>
+                                    <th>Explanation</th>
+                                    <th>Rating</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Static</td>
+                                    <td>
+                                        Many cloud providers provide easy-to-use
+                                        notification systems that fire when new
+                                        assets land in blob storage
+                                    </td>
+                                    <td>⚠️</td>
+                                </tr>
+                                <tr>
+                                    <td>API</td>
+                                    <td>
+                                        Most open-source API implementations do
+                                        not come with a notification system
+                                        out-of-the-box
+                                    </td>
+                                    <td>❌</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </section>
                     <section>
                         <h2>Modes and uses</h2>
@@ -126,7 +331,7 @@
                                     <td>⚠️</td>
                                     <td>❌</td>
                                 </tr>
-                                <tr>
+                                <tr class="fragment">
                                     <td>Cost and complexity</td>
                                     <td>✅</td>
                                     <td>⚠️</td>
@@ -137,16 +342,27 @@
                 </section>
                 <section>
                     <section>
-                        <h2>stac-geoparquet</h2>
-
-                        <p>
-                            <img src="img/stac-geoparquet.png" height="200" />
-                        </p>
-
                         <img
-                            src="img/stac-geoparquet.excalidraw.png"
+                            src="img/low-cost-vs-powerful-search.jpg"
                             class="r-stretch"
                         />
+                    </section>
+                    <section>
+                        <h2>
+                            Cloud-native geospatial
+                            <span class="fragment" data-fragment-index="1"
+                                >meta</span
+                            >data
+                        </h2>
+
+                        <img
+                            src="img/cloud-native-data-formats.excalidraw.png"
+                            class="r-stretch"
+                        />
+
+                        <p class="fragment" data-fragment-index="1">
+                            <img src="img/stac-geoparquet.png" height="150" />
+                        </p>
                     </section>
                     <section>
                         <h2>stac-geoparquet specification</h2>
@@ -345,6 +561,35 @@
                     </section>
                 </section>
                 <section>
+                    <h2>The rise of the machines</h2>
+
+                    <p style="font-size: xx-large">
+                        Large, statically hosted datasets that rich text
+                        descriptions can be quite useful when fed to a robot.
+                    </p>
+
+                    <img src="img/bender-rodriguez.png" class="r-stretch" />
+
+                    <p style="font-size: large">
+                        By
+                        <a
+                            rel="nofollow"
+                            class="external free"
+                            href="https://eleven.com.au/futurama-characters.html"
+                            >https://eleven.com.au/futurama-characters.html</a
+                        >,
+                        <a
+                            href="//en.wikipedia.org/wiki/File:Bender_Rodriguez.png"
+                            title="Fair use of copyrighted material in the context of Bender (Futurama)"
+                            >Fair use</a
+                        >,
+                        <a
+                            href="https://en.wikipedia.org/w/index.php?curid=18172404"
+                            >Link</a
+                        >
+                    </p>
+                </section>
+                <section>
                     <h2>Updated modes and uses</h2>
 
                     <table style="font-size: x-large">
@@ -499,6 +744,11 @@
                         </p>
                     </section>
                 </section>
+                <section>
+                    <h2>Fin</h2>
+
+                    <p>Thank you for your time</p>
+                </section>
             </div>
         </div>
 
@@ -516,6 +766,9 @@
                 // Learn about plugins: https://revealjs.com/plugins/
                 plugins: [RevealMarkdown, RevealHighlight, RevealNotes],
             });
+        </script>
+        <script type="module">
+            import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
         </script>
     </body>
 </html>
