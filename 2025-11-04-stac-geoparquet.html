@@ -1,0 +1,774 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+
+        <title>stac-geoparquet</title>
+
+        <link rel="stylesheet" href="dist/reset.css" />
+        <link rel="stylesheet" href="dist/reveal.css" />
+        <link rel="stylesheet" href="dist/theme/devseed.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap"
+            rel="stylesheet"
+        />
+
+        <!-- Theme used for syntax highlighted code -->
+        <link rel="stylesheet" href="plugin/highlight/monokai.css" />
+
+        <style>
+            h3.handwriting,
+            p.handwriting {
+                font-family: "Shadows Into Light", cursive;
+                font-weight: bold;
+                font-style: normal;
+                color: #d04200;
+            }
+            .reveal .mermaid {
+                box-shadow: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="reveal">
+            <div class="slides">
+                <section>
+                    <h2>
+                        Cloud-Native Geospatial Metadata with stac-geoparquet
+                    </h2>
+
+                    <h3 class="handwriting">a.k.a. "Pragmatic STAC"</h3>
+
+                    <p style="font-size: xx-large">Pete Gadomski</p>
+                </section>
+
+                <section>
+                    <section>
+                        <h2>A brief STAC history</h2>
+
+                        <pre class="mermaid r-stretch">
+                            ---
+                            config:
+                                theme: neutral
+                                look: handdrawn
+                            ---
+                            timeline
+                                2017 : Initial commit to what became the stac-spec repository
+                                     : Sprint 1 (Boulder)
+                                     : v0.1.0
+                                2018 : Name changed to STAC
+                                     : Sprints 2 (Ft. Collins) and 3 (Menlo Park)
+                                     : v0.4.0 to v0.6.0
+                                2019 : Sprint 4 and 5 (Arlington)
+                                     : v0.7.0 to v0.8.0
+                                2020 : Sprint 6 (Virtual)
+                                     : v0.9.0
+                                2021 : v1.0.0
+                                2023 : Sprint 7 (Philadelphia)
+                                     : API v1.0.0
+                                2024 : v1.1.0
+                                2025 : Sprint 8 (Italy)
+                                     : OGC Community Standard
+                        </pre>
+
+                        <p style="font-size: large">
+                            Cribbed heavily from
+                            <a
+                                href="https://element84.com/geospatial/stac-a-retrospective-part-1/"
+                                >https://element84.com/geospatial/stac-a-retrospective-part-1/</a
+                            >
+                        </p>
+                    </section>
+                    <section>
+                        <h2>Why did STAC work?</h2>
+
+                        <img
+                            src="img/open-specifications-expanded.excalidraw.png"
+                            class="r-stretch"
+                        />
+
+                        <p style="font-size: large">
+                            For more, see
+                            <a
+                                href="https://element84.com/software-engineering/stac-a-retrospective-part-2-why-stac-was-successful/"
+                            >
+                                https://element84.com/software-engineering/stac-a-retrospective-part-2-why-stac-was-successful/
+                            </a>
+                        </p>
+                    </section>
+                    <section>
+                        <h2>What the STAC?</h2>
+                        <img
+                            src="img/what-the-stac.excalidraw.png"
+                            class="r-stretch"
+                        />
+
+                        <div style="font-size: xx-large">
+                            <blockquote>
+                                STAC is the map to your data.
+                            </blockquote>
+                            <p>&mdash; Howard Butler</p>
+                        </div>
+                    </section>
+                    <section>
+                        <h2>STAC entities</h2>
+
+                        <img
+                            src="img/stac-entities.excalidraw.png"
+                            class="r-stretch"
+                        />
+                    </section>
+                    <section>
+                        <h2>Modes of STAC</h2>
+
+                        <img
+                            src="img/modes-of-stac.excalidraw.png"
+                            class="r-stretch"
+                        />
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>Uses of STAC</h2>
+
+                        <img
+                            src="img/uses-of-stac.excalidraw.png"
+                            class="r-stretch"
+                        />
+
+                        <p class="handwriting" style="font-size: xx-large">
+                            These are very much Pete's opinions, based on his
+                            experience. Your mileage will almost certainly vary.
+                        </p>
+                    </section>
+                    <section>
+                        <h2>Uses of STAC: search</h2>
+
+                        <blockquote style="font-size: x-large">
+                            I need all Landsat images with cloud cover less than
+                            20% over Summit County, Colorado in 2025 for a snow
+                            distribution research project
+                        </blockquote>
+
+                        <table style="font-size: x-large">
+                            <thead>
+                                <tr>
+                                    <th>Mode</th>
+                                    <th>Explanation</th>
+                                    <th>Rating</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Static</td>
+                                    <td>
+                                        The user must read every JSON blob and
+                                        compare it to the search criteria
+                                    </td>
+                                    <td>❌</td>
+                                </tr>
+                                <tr>
+                                    <td>API</td>
+                                    <td>
+                                        Databases and other data stores usually
+                                        have indexes on commonly-searched
+                                        properties, including datetime and
+                                        geometry
+                                    </td>
+                                    <td>✅</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                    <section>
+                        <h2>Uses of STAC: full scan</h2>
+
+                        <blockquote style="font-size: x-large">
+                            I need every NAIP image to train a model.
+                        </blockquote>
+
+                        <table style="font-size: x-large">
+                            <thead>
+                                <tr>
+                                    <th>Mode</th>
+                                    <th>Explanation</th>
+                                    <th>Rating</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Static</td>
+                                    <td>
+                                        The user must read every JSON blob, but
+                                        blob storage is pretty good at this.
+                                    </td>
+                                    <td>⚠️</td>
+                                </tr>
+                                <tr>
+                                    <td>API</td>
+                                    <td>
+                                        Paging through API calls takes a lot of
+                                        time, and full scans often get throttled
+                                        or otherwise error.
+                                    </td>
+                                    <td>⚠️</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                    <section>
+                        <h2>Uses of STAC: ingest</h2>
+
+                        <blockquote style="font-size: x-large">
+                            I need to update my data store each day with a new
+                            analytic product
+                        </blockquote>
+
+                        <table style="font-size: x-large">
+                            <thead>
+                                <tr>
+                                    <th>Mode</th>
+                                    <th>Explanation</th>
+                                    <th>Rating</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Static</td>
+                                    <td>
+                                        Adding a new JSON file to blob storage
+                                        is trivially easy, as is updating its
+                                        parent collection
+                                    </td>
+                                    <td>✅</td>
+                                </tr>
+                                <tr>
+                                    <td>API</td>
+                                    <td>
+                                        Ingestion pipelines into databases or
+                                        other document stores are often bespoke
+                                        and complex
+                                    </td>
+                                    <td>⚠️</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                    <section>
+                        <h2>Uses of STAC: near real-time</h2>
+
+                        <blockquote style="font-size: x-large">
+                            I need to be notified as soon as a new weather
+                            forecast is available, so I can update my market
+                            model
+                        </blockquote>
+
+                        <table style="font-size: x-large">
+                            <thead>
+                                <tr>
+                                    <th>Mode</th>
+                                    <th>Explanation</th>
+                                    <th>Rating</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Static</td>
+                                    <td>
+                                        Many cloud providers provide easy-to-use
+                                        notification systems that fire when new
+                                        assets land in blob storage
+                                    </td>
+                                    <td>⚠️</td>
+                                </tr>
+                                <tr>
+                                    <td>API</td>
+                                    <td>
+                                        Most open-source API implementations do
+                                        not come with a notification system
+                                        out-of-the-box
+                                    </td>
+                                    <td>❌</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                    <section>
+                        <h2>Modes and uses</h2>
+
+                        <table style="font-size: x-large">
+                            <thead>
+                                <tr>
+                                    <th>Use</th>
+                                    <th>Static</th>
+                                    <th>API</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Search</td>
+                                    <td>❌</td>
+                                    <td>✅</td>
+                                </tr>
+                                <tr>
+                                    <td>Full scan</td>
+                                    <td>⚠️</td>
+                                    <td>⚠️</td>
+                                </tr>
+                                <tr>
+                                    <td>Ingest</td>
+                                    <td>✅</td>
+                                    <td>⚠️</td>
+                                </tr>
+                                <tr>
+                                    <td>Near realtime</td>
+                                    <td>⚠️</td>
+                                    <td>❌</td>
+                                </tr>
+                                <tr class="fragment">
+                                    <td>Cost and complexity</td>
+                                    <td>✅</td>
+                                    <td>⚠️</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <img
+                            src="img/low-cost-vs-powerful-search.jpg"
+                            class="r-stretch"
+                        />
+                    </section>
+                    <section>
+                        <h2>
+                            Cloud-native geospatial
+                            <span class="fragment" data-fragment-index="1"
+                                >meta</span
+                            >data
+                        </h2>
+
+                        <img
+                            src="img/cloud-native-data-formats.excalidraw.png"
+                            class="r-stretch"
+                        />
+
+                        <p class="fragment" data-fragment-index="1">
+                            <img src="img/stac-geoparquet.png" height="150" />
+                        </p>
+                    </section>
+                    <section>
+                        <h2>stac-geoparquet specification</h2>
+
+                        <img
+                            src="img/stac-data-storage.excalidraw.png"
+                            class="r-stretch"
+                        />
+
+                        <p style="font-size: large">
+                            <a
+                                href="https://github.com/radiantearth/stac-geoparquet-spec"
+                                >https://github.com/radiantearth/stac-geoparquet-spec</a
+                            >
+                        </p>
+                    </section>
+                    <section>
+                        <h2>Data are useful at rest</h2>
+
+                        <img
+                            src="img/stac-map-with-geoparquet.png"
+                            class="r-stretch"
+                        />
+
+                        <pre>
+                            <code data-trim data-noescap class="language-shell" style="font-size: x-small;">
+                                $ rustac search \
+                                    https://raw.githubusercontent.com/developmentseed/labs-375-stac-geoparquet-backend/refs/heads/main/data/naip.parquet \
+                                    --intersects='{"type":"Point","coordinates":[-105.1019,40.1672]}'
+                            </code>
+                        </pre>
+                    </section>
+                    <section>
+                        <h2>No geospatial moats</h2>
+
+                        <pre>
+                            <code data-trim class="language-sql" style="font-size: large;">
+                                D select max(datetime), min(datetime)
+                                  from 'https://raw.githubusercontent.com/developmentseed/'
+                                  'labs-375-stac-geoparquet-backend/refs/heads/main/'
+                                  'data/naip.parquet';
+                                ┌──────────────────────────┬──────────────────────────┐
+                                │      max(datetime)       │      min(datetime)       │
+                                │ timestamp with time zone │ timestamp with time zone │
+                                ├──────────────────────────┼──────────────────────────┤
+                                │ 2022-08-27 10:00:00-06   │ 2019-09-18 18:00:00-06   │
+                                └──────────────────────────┴──────────────────────────┘
+                            </code>
+                        </pre>
+                    </section>
+                    <section>
+                        <h2>Data are smaller</h2>
+
+                        <img
+                            src="img/geoparquet-size-chart.excalidraw.png"
+                            class="r-stretch"
+                        />
+
+                        <table style="font-size: large">
+                            <thead>
+                                <tr>
+                                    <th>Format</th>
+                                    <th>Size</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>json</td>
+                                    <td>21 MB</td>
+                                </tr>
+                                <tr>
+                                    <td>json.gz</td>
+                                    <td>614 kB</td>
+                                </tr>
+                                <tr>
+                                    <td>parquet</td>
+                                    <td>488 kB</td>
+                                </tr>
+                                <tr>
+                                    <td>parquet (compressed)</td>
+                                    <td>179 kB</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p style="font-size: large">1000 sentinel-2 items</p>
+                    </section>
+                    <section>
+                        <h2>Major downside: inflexible schema</h2>
+
+                        <p>Workarounds:</p>
+
+                        <ul>
+                            <li>
+                                DuckDB's
+                                <a
+                                    href="https://duckdb.org/docs/stable/data/parquet/tips#use-union_by_name-when-loading-files-with-different-schemas"
+                                    >union_by_name</a
+                                >
+                            </li>
+                            <li>
+                                The new
+                                <a
+                                    href="https://www.databricks.com/blog/introducing-variant-new-open-standard-semi-structured-data-apache-parquettm-delta-lake"
+                                    >variant</a
+                                >
+                                type
+                            </li>
+                            <li>Just re-write it</li>
+                        </ul>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>Experiments</h2>
+
+                        <p>🧑‍🔬</p>
+                    </section>
+                    <section>
+                        <h2>stac-fastapi-geoparquet</h2>
+
+                        <img
+                            src="img/labs-375-experiment-architecture.excalidraw.png"
+                            class="r-stretch"
+                        />
+
+                        <p style="font-size: large">
+                            <a
+                                href="https://github.com/developmentseed/labs-375-stac-geoparquet-backend/"
+                                >https://github.com/developmentseed/labs-375-stac-geoparquet-backend/</a
+                            >
+                        </p>
+                    </section>
+                    <section>
+                        <h2>stac-fastapi-geoparquet full-scan</h2>
+
+                        <img
+                            src="img/labs-375-single-search.png"
+                            class="r-stretch"
+                        />
+                    </section>
+                    <section>
+                        <h2>stac-fastapi-geoparquet search</h2>
+
+                        <img src="img/labs-375-searching-attributes.png" />
+                    </section>
+                    <section>
+                        <h2>ITS_LIVE</h2>
+
+                        <p style="font-size: large">
+                            Searching ten million items is reduced from 187s to
+                            3s by partitioning and sorting
+                        </p>
+                        <pre>
+                            <code data-trim class="language-sql" style="font-size: small;">
+                                D select id from
+                                  read_parquet('s3://stac-fastapi-geoparquet-labs-375/its-live-partitioned-sorted/**/*.parquet')
+                                  where id = '2008-12-31T19:26:47Z-LE07_L1GT_116115_20081215_20200912_02_T2_X_LE07_L1GT_114115_20090118_20200912_02_T2_G0120V02_P097';
+                            </code>
+                        </pre>
+
+                        <img
+                            src="img/sorting-and-partitioning-stac-geoparquet.excalidraw.png"
+                            class="r-stretch"
+                        />
+
+                        <p style="font-size: large">
+                            <a
+                                href="https://www.gadom.ski/posts/stac-geoparquet-organization/"
+                                >https://www.gadom.ski/posts/stac-geoparquet-organization/</a
+                            >
+                            <br />
+                            <a
+                                href="https://stac-utils.github.io/rustac-py/latest/notebooks/its-live/"
+                                >https://stac-utils.github.io/rustac-py/latest/notebooks/its-live/</a
+                            >
+                        </p>
+                    </section>
+                    <section>
+                        <h2>Large-scale on source.coop</h2>
+
+                        <img
+                            src="img/stac-geoparquet-on-source-coop.png"
+                            class="r-stretch"
+                        />
+                    </section>
+                    <section>
+                        <p>More experimentation needed</p>
+
+                        <ul style="font-size: xx-large">
+                            <li>Sorting</li>
+                            <li>Asset structures</li>
+                            <li>Snapshots</li>
+                            <li>Transactions</li>
+                            <li>Embeddings</li>
+                        </ul>
+                    </section>
+                </section>
+                <section>
+                    <h2>The rise of the machines</h2>
+
+                    <p style="font-size: xx-large">
+                        Large, statically hosted datasets that rich text
+                        descriptions can be quite useful when fed to a robot.
+                    </p>
+
+                    <img src="img/bender-rodriguez.png" class="r-stretch" />
+
+                    <p style="font-size: large">
+                        By
+                        <a
+                            rel="nofollow"
+                            class="external free"
+                            href="https://eleven.com.au/futurama-characters.html"
+                            >https://eleven.com.au/futurama-characters.html</a
+                        >,
+                        <a
+                            href="//en.wikipedia.org/wiki/File:Bender_Rodriguez.png"
+                            title="Fair use of copyrighted material in the context of Bender (Futurama)"
+                            >Fair use</a
+                        >,
+                        <a
+                            href="https://en.wikipedia.org/w/index.php?curid=18172404"
+                            >Link</a
+                        >
+                    </p>
+                </section>
+                <section>
+                    <h2>Updated modes and uses</h2>
+
+                    <table style="font-size: x-large">
+                        <thead>
+                            <tr>
+                                <th>Use</th>
+                                <th>Static</th>
+                                <th>API</th>
+                                <th>stac-geoparquet</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Search</td>
+                                <td>❌</td>
+                                <td>✅</td>
+                                <td>⚠️</td>
+                            </tr>
+                            <tr>
+                                <td>Full scan</td>
+                                <td>⚠️</td>
+                                <td>⚠️</td>
+                                <td>✅</td>
+                            </tr>
+                            <tr>
+                                <td>Ingest</td>
+                                <td>✅</td>
+                                <td>⚠️</td>
+                                <td>⚠️</td>
+                            </tr>
+                            <tr>
+                                <td>Near realtime</td>
+                                <td>⚠️</td>
+                                <td>❌</td>
+                                <td>⚠️</td>
+                            </tr>
+                            <tr>
+                                <td>Cost and complexity</td>
+                                <td>✅</td>
+                                <td>⚠️</td>
+                                <td>✅</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>Maturity</td>
+                                <td>✅</td>
+                                <td>✅</td>
+                                <td>⚠️</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+                <section>
+                    <section>
+                        <h2>Tooling</h2>
+
+                        <ul>
+                            <li><a href="https://duckdb.org/">DuckDB</a></li>
+                            <li>
+                                <a
+                                    href="https://github.com/stac-utils/stac-geoparquet"
+                                    >stac-geoparquet</a
+                                >
+                            </li>
+                            <li>
+                                <a href="https://github.com/stac-utils/rustac"
+                                    >rustac</a
+                                >
+                            </li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h2>stac-map</h2>
+
+                        <img
+                            src="img/stac-map-for-geoparquet.gif"
+                            class="r-stretch"
+                        />
+
+                        <p style="font-size: large">
+                            <a href="https://developmentseed.org/stac-map"
+                                >https://developmentseed.org/stac-map</a
+                            >
+                        </p>
+                    </section>
+                    <section>
+                        <h2>stac-map</h2>
+
+                        <img
+                            src="img/stac-map-for-geoparquet-search.gif"
+                            class="r-stretch"
+                        />
+
+                        <p style="font-size: large">
+                            <a href="https://developmentseed.org/stac-map"
+                                >https://developmentseed.org/stac-map</a
+                            >
+                        </p>
+                    </section>
+                    <section>
+                        <h2>Software ecosystem</h2>
+
+                        <img
+                            src="img/stac-geoparquet-software-ecosystem.excalidraw.png"
+                            class="r-stretch"
+                        />
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>Next steps</h2>
+
+                        <img src="img/mountain.jpg" class="r-stretch" />
+                    </section>
+                    <section>
+                        <h2>Extract the spec</h2>
+
+                        <img
+                            src="img/stac-geoparquet-spec-site.png"
+                            class="r-stretch"
+                        />
+
+                        <p style="font-size: x-large">
+                            Complete spec move to
+                            <a
+                                href="https://github.com/radiantearth/stac-geoparquet-spec"
+                            >
+                                https://github.com/radiantearth/stac-geoparquet-spec
+                            </a>
+                        </p>
+                    </section>
+                    <section>
+                        <h2>More examples and documentation!</h2>
+                    </section>
+                    <section>
+                        <h2>Release v1</h2>
+
+                        <p>⛵︎</p>
+
+                        <p style="font-size: x-large">
+                            Open questions around including an optional generic
+                            JSON blob in the recommended schema, how we handle
+                            assets, and more.
+                        </p>
+
+                        <p style="font-size: x-large">
+                            Head on over to the repo's
+                            <a
+                                href="https://github.com/radiantearth/stac-geoparquet-spec/issues"
+                                >issues</a
+                            >
+                            to weigh in!
+                        </p>
+                    </section>
+                </section>
+                <section>
+                    <h2>Fin</h2>
+
+                    <p>Thank you for your time</p>
+                </section>
+            </div>
+        </div>
+
+        <script src="dist/reveal.js"></script>
+        <script src="plugin/notes/notes.js"></script>
+        <script src="plugin/markdown/markdown.js"></script>
+        <script src="plugin/highlight/highlight.js"></script>
+        <script>
+            // More info about initialization & config:
+            // - https://revealjs.com/initialization/
+            // - https://revealjs.com/config/
+            Reveal.initialize({
+                hash: true,
+
+                // Learn about plugins: https://revealjs.com/plugins/
+                plugins: [RevealMarkdown, RevealHighlight, RevealNotes],
+            });
+        </script>
+        <script type="module">
+            import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+        </script>
+    </body>
+</html>
