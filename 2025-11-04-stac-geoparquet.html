@@ -23,10 +23,14 @@
         <link rel="stylesheet" href="plugin/highlight/monokai.css" />
 
         <style>
+            @font-face {
+                font-family: xkcd-script;
+                src: url("https://cdn.jsdelivr.net/gh/ipython/xkcd-font@master/xkcd-script/font/xkcd-script.woff")
+                    format("woff");
+            }
             h3.handwriting,
             p.handwriting {
-                font-family: "Shadows Into Light", cursive;
-                font-weight: bold;
+                font-family: "xkcd-script", "Shadows Into Light", cursive;
                 font-style: normal;
                 color: #d04200;
             }
@@ -131,8 +135,8 @@ timeline
                         />
 
                         <p class="handwriting" style="font-size: xx-large">
-                            These are very much Pete's opinions, based on his
-                            experience. Your mileage will almost certainly vary.
+                            Based on commonly-used, open source projects such as
+                            <strong>stac-fastapi</strong>
                         </p>
                     </section>
                     <section>
@@ -155,20 +159,12 @@ timeline
                             <tbody>
                                 <tr>
                                     <td>Static</td>
-                                    <td>
-                                        The user must read every JSON blob and
-                                        compare it to the search criteria
-                                    </td>
+                                    <td>Read every blob</td>
                                     <td>❌</td>
                                 </tr>
                                 <tr>
                                     <td>API</td>
-                                    <td>
-                                        Databases and other data stores usually
-                                        have indexes on commonly-searched
-                                        properties, including datetime and
-                                        geometry
-                                    </td>
+                                    <td>Indexes</td>
                                     <td>✅</td>
                                 </tr>
                             </tbody>
@@ -192,19 +188,12 @@ timeline
                             <tbody>
                                 <tr>
                                     <td>Static</td>
-                                    <td>
-                                        The user must read every JSON blob, but
-                                        blob storage is pretty good at this.
-                                    </td>
+                                    <td>Read every blob</td>
                                     <td>⚠️</td>
                                 </tr>
                                 <tr>
                                     <td>API</td>
-                                    <td>
-                                        Paging through API calls takes a lot of
-                                        time, and full scans often get throttled
-                                        or otherwise error.
-                                    </td>
+                                    <td>Throttling, intermittent errors</td>
                                     <td>⚠️</td>
                                 </tr>
                             </tbody>
@@ -229,20 +218,12 @@ timeline
                             <tbody>
                                 <tr>
                                     <td>Static</td>
-                                    <td>
-                                        Adding a new JSON file to blob storage
-                                        is trivially easy, as is updating its
-                                        parent collection
-                                    </td>
+                                    <td>Add one file, modify another</td>
                                     <td>✅</td>
                                 </tr>
                                 <tr>
                                     <td>API</td>
-                                    <td>
-                                        Ingestion pipelines into databases or
-                                        other document stores are often bespoke
-                                        and complex
-                                    </td>
+                                    <td>Usually bespoke and complex</td>
                                     <td>⚠️</td>
                                 </tr>
                             </tbody>
@@ -268,20 +249,12 @@ timeline
                             <tbody>
                                 <tr>
                                     <td>Static</td>
-                                    <td>
-                                        Many cloud providers provide easy-to-use
-                                        notification systems that fire when new
-                                        assets land in blob storage
-                                    </td>
+                                    <td>Out-of-the-box (sometimes)</td>
                                     <td>⚠️</td>
                                 </tr>
                                 <tr>
                                     <td>API</td>
-                                    <td>
-                                        Most open-source API implementations do
-                                        not come with a notification system
-                                        out-of-the-box
-                                    </td>
+                                    <td>404 not found</td>
                                     <td>❌</td>
                                 </tr>
                             </tbody>
@@ -360,11 +333,31 @@ timeline
                             class="r-stretch"
                         />
 
+                        <p style="font-size: x-large">
+                            Initial commit May 2022 by Tom Augspurger
+                        </p>
+
                         <p style="font-size: large">
                             <a
                                 href="https://github.com/radiantearth/stac-geoparquet-spec"
                                 >https://github.com/radiantearth/stac-geoparquet-spec</a
                             >
+                        </p>
+                    </section>
+                    <section>
+                        <h2>Uses of STAC: full scan</h2>
+
+                        <img
+                            src="img/microsoft-pc-stac-geoparquet.png"
+                            class="r-stretch"
+                        />
+
+                        <p style="font-size: medium">
+                            <a
+                                href="https://radiantearth.github.io/stac-browser/#/external/planetarycomputer.microsoft.com/api/stac/v1/collections/io-lulc-annual-v02"
+                            >
+                                https://radiantearth.github.io/stac-browser/#/external/planetarycomputer.microsoft.com/api/stac/v1/collections/io-lulc-annual-v02
+                            </a>
                         </p>
                     </section>
                     <section>
@@ -472,6 +465,11 @@ timeline
                         <h2>Experiments</h2>
 
                         <p>🧑‍🔬</p>
+
+                        <ol>
+                            <li>stac-fastapi-geoparquet</li>
+                            <li>ITS_LIVE</li>
+                        </ol>
                     </section>
                     <section>
                         <h2>stac-fastapi-geoparquet</h2>
@@ -481,12 +479,35 @@ timeline
                             class="r-stretch"
                         />
 
-                        <p style="font-size: large">
-                            <a
-                                href="https://github.com/developmentseed/labs-375-stac-geoparquet-backend/"
-                                >https://github.com/developmentseed/labs-375-stac-geoparquet-backend/</a
-                            >
-                        </p>
+                        <div>
+                            <ul style="font-size: large">
+                                <li>
+                                    Three collections
+
+                                    <ul>
+                                        <li>10k items from NAIP</li>
+                                        <li>2.2M items from Sentinel 2 L2A</li>
+                                        <li>14k items from OpenAerialMap</li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    Two backends
+                                    <ul>
+                                        <li>stac-fastapi-pgstac</li>
+                                        <li>stac-fastapi-geoparquet</li>
+                                    </ul>
+                                </li>
+                                <li>Battery of tests</li>
+                                <li>Cost tracking</li>
+                            </ul>
+
+                            <p style="font-size: large">
+                                <a
+                                    href="https://github.com/developmentseed/labs-375-stac-geoparquet-backend/"
+                                    >https://github.com/developmentseed/labs-375-stac-geoparquet-backend/</a
+                                >
+                            </p>
+                        </div>
                     </section>
                     <section>
                         <h2>stac-fastapi-geoparquet full-scan</h2>
@@ -521,18 +542,31 @@ timeline
                     <section>
                         <h2>ITS_LIVE</h2>
 
+                        <img src="img/its-live.png" class="r-stretch" />
+
+                        <ul style="font-size: x-large">
+                            <li>10M items as 29GB of JSON in AWS s3</li>
+                            <li>Heterogeneous spatial distribution</li>
+                            <li>Full-scan (or at least bulk) requests</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h2>ITS_LIVE</h2>
+
                         <p style="font-size: large">
-                            Searching ten million items is reduced from 187s to
-                            3s by partitioning and sorting
+                            Searching by id ten million items is reduced from
+                            187s to 3s by partitioning and sorting
                         </p>
-                        <pre>
-                            <code data-trim class="language-sql" style="font-size: small;">
-                                D copy (select * from
-                                      (select * replace concat_ws('-', strftime(datetime, '%Y-%m-%dT%H:%M:%SZ'), id) as id
-                                        from read_parquet('its-live-partitioned/**/*.parquet'))
-                                      order by id) to 'its-live-partitioned-sorted' (format parquet, partition_by (year));
-                            </code>
-                        </pre>
+                        <p style="font-size: large">
+                            For more on spatial partitioning, see
+                            <a
+                                href="https://agu.confex.com/agu/agu25/meetingapp.cgi/Paper/1973155"
+                                >Enabling Cryo Science at Scale: How ITS_LIVE is
+                                Providing a Serverless Analysis Ready Archive of
+                                the Future
+                            </a>
+                            by Joe Kennedy, Luis López, et al
+                        </p>
 
                         <img
                             src="img/sorting-and-partitioning-stac-geoparquet.excalidraw.png"
@@ -558,17 +592,6 @@ timeline
                             src="img/stac-geoparquet-on-source-coop.png"
                             class="r-stretch"
                         />
-                    </section>
-                    <section>
-                        <p>More experimentation needed</p>
-
-                        <ul style="font-size: xx-large">
-                            <li>Sorting</li>
-                            <li>Asset structures</li>
-                            <li>Snapshots</li>
-                            <li>Transactions</li>
-                            <li>Embeddings</li>
-                        </ul>
                     </section>
                 </section>
                 <section>
@@ -659,7 +682,7 @@ timeline
                         <table style="font-size: x-large">
                             <thead>
                                 <tr>
-                                    <th style="width: 25%">Name</th>
+                                    <th style="width: 40%">Name</th>
                                     <th>Description</th>
                                 </tr>
                             </thead>
@@ -668,25 +691,39 @@ timeline
                                     <td>
                                         <a
                                             href="https://github.com/stac-utils/stac-geoparquet"
-                                            >stac-geoparquet</a
+                                            >stac-utils/stac-geoparquet</a
                                         >
                                     </td>
                                     <td>
-                                        Original reference implementation.
-                                        Mature API for streaming, snapshotting
-                                        <strong>pgstac</strong>, going to Delta
-                                        Lake, and more.
+                                        Original reference implementation,
+                                        streaming, snapshotting
+                                        <strong>pgstac</strong>, Delta Lake
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <a
                                             href="https://github.com/stac-utils/rustac"
-                                            >rustac</a
+                                            >stac-utils/rustac</a
                                         >
                                     </td>
                                     <td>
-                                        Lower-level Python API and CLI, async
+                                        Lower-level, Python and CLI, async, STAC
+                                        search directly on
+                                        <strong>stac-geoparquet</strong> files
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a
+                                            href="https://github.com/stac-utils/stac-fastapi-geoparquet/"
+                                            >stac-utils/stac-fastapi-geoparquet</a
+                                        >
+                                    </td>
+                                    <td>
+                                        Search and discovery for
+                                        <strong>stac-geoparquet</strong> files
+                                        through an HTTP API (experimental)
                                     </td>
                                 </tr>
                                 <tr>
@@ -694,8 +731,7 @@ timeline
                                         <a href="https://duckdb.org/">DuckDB</a>
                                     </td>
                                     <td>
-                                        Good for reading, querying, and
-                                        re-partitioning
+                                        Reading, querying, and re-partitioning
                                     </td>
                                 </tr>
                                 <tr>
@@ -796,6 +832,11 @@ timeline
                             src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExb2tiMXZ3cXc1NTJrMXMweG9xNnIyMHFvcmd0ZG84NHFrenl1Y2NuNSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/XIqCQx02E1U9W/giphy.gif"
                             height="200"
                         />
+
+                        <p style="font-size: x-large" class="handwriting">
+                            TODO @gadomski patterns and recipes for sorting and
+                            partitioning
+                        </p>
                     </section>
                     <section>
                         <h2>Push to v1</h2>
