@@ -34,6 +34,7 @@
                 box-shadow: none;
             }
         </style>
+        <link rel="icon" type="image/png" href="img/stac-geoparquet.png" />
     </head>
     <body>
         <div class="reveal">
@@ -45,6 +46,8 @@
 
                     <h3 class="handwriting">a.k.a. "Pragmatic STAC"</h3>
 
+                    <img src="img/stac-geoparquet.png" height="200" />
+
                     <p style="font-size: xx-large">Pete Gadomski</p>
                 </section>
 
@@ -52,29 +55,31 @@
                     <section>
                         <h2>A brief STAC history</h2>
 
+                        <p>SpatioTemporal Asset Catalog (STAC)</p>
+
                         <pre class="mermaid r-stretch">
-                            ---
-                            config:
-                                theme: neutral
-                                look: handdrawn
-                            ---
-                            timeline
-                                2017 : Initial commit to what became the stac-spec repository
-                                     : Sprint 1 (Boulder)
-                                     : v0.1.0
-                                2018 : Name changed to STAC
-                                     : Sprints 2 (Ft. Collins) and 3 (Menlo Park)
-                                     : v0.4.0 to v0.6.0
-                                2019 : Sprint 4 and 5 (Arlington)
-                                     : v0.7.0 to v0.8.0
-                                2020 : Sprint 6 (Virtual)
-                                     : v0.9.0
-                                2021 : v1.0.0
-                                2023 : Sprint 7 (Philadelphia)
-                                     : API v1.0.0
-                                2024 : v1.1.0
-                                2025 : Sprint 8 (Italy)
-                                     : OGC Community Standard
+---
+config:
+    theme: neutral
+    look: handdrawn
+---
+timeline
+    2017 : Initial commit to what became the stac-spec repository
+            : Sprint 1 (Boulder)
+            : v0.1.0
+    2018 : Name changed to STAC
+            : Sprints 2 (Ft. Collins) and 3 (Menlo Park)
+            : v0.4.0 to v0.6.0
+    2019 : Sprint 4 and 5 (Arlington)
+            : v0.7.0 to v0.8.0
+    2020 : Sprint 6 (Virtual)
+            : v0.9.0
+    2021 : v1.0.0
+    2023 : Sprint 7 (Philadelphia)
+            : API v1.0.0
+    2024 : v1.1.0
+    2025 : Sprint 8 (Italy)
+            : OGC Community Standard
                         </pre>
 
                         <p style="font-size: large">
@@ -83,23 +88,6 @@
                                 href="https://element84.com/geospatial/stac-a-retrospective-part-1/"
                                 >https://element84.com/geospatial/stac-a-retrospective-part-1/</a
                             >
-                        </p>
-                    </section>
-                    <section>
-                        <h2>Why did STAC work?</h2>
-
-                        <img
-                            src="img/open-specifications-expanded.excalidraw.png"
-                            class="r-stretch"
-                        />
-
-                        <p style="font-size: large">
-                            For more, see
-                            <a
-                                href="https://element84.com/software-engineering/stac-a-retrospective-part-2-why-stac-was-successful/"
-                            >
-                                https://element84.com/software-engineering/stac-a-retrospective-part-2-why-stac-was-successful/
-                            </a>
                         </p>
                     </section>
                     <section>
@@ -124,14 +112,14 @@
                             class="r-stretch"
                         />
                     </section>
-                    <section>
-                        <h2>Modes of STAC</h2>
+                </section>
+                <section>
+                    <h2>Modes of STAC</h2>
 
-                        <img
-                            src="img/modes-of-stac.excalidraw.png"
-                            class="r-stretch"
-                        />
-                    </section>
+                    <img
+                        src="img/modes-of-stac.excalidraw.png"
+                        class="r-stretch"
+                    />
                 </section>
                 <section>
                     <section>
@@ -398,20 +386,25 @@
                     <section>
                         <h2>No geospatial moats</h2>
 
+                        <a
+                            title="Martin Falbisoner, CC BY-SA 4.0 &lt;https://creativecommons.org/licenses/by-sa/4.0&gt;, via Wikimedia Commons"
+                            href="https://commons.wikimedia.org/wiki/File:Osaka_Castle_Outer_Moat_and_Osaka_Business_Park,_November_2016.jpg"
+                            ><img
+                                width="256"
+                                alt="Osaka Castle Outer Moat and Osaka Business Park, November 2016"
+                                src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Osaka_Castle_Outer_Moat_and_Osaka_Business_Park%2C_November_2016.jpg/256px-Osaka_Castle_Outer_Moat_and_Osaka_Business_Park%2C_November_2016.jpg?20161230221303"
+                        /></a>
                         <pre>
-                            <code data-trim class="language-sql" style="font-size: large;">
-                                D select max(datetime), min(datetime)
-                                  from 'https://raw.githubusercontent.com/developmentseed/'
-                                  'labs-375-stac-geoparquet-backend/refs/heads/main/'
-                                  'data/naip.parquet';
-                                ┌──────────────────────────┬──────────────────────────┐
-                                │      max(datetime)       │      min(datetime)       │
-                                │ timestamp with time zone │ timestamp with time zone │
-                                ├──────────────────────────┼──────────────────────────┤
-                                │ 2022-08-27 10:00:00-06   │ 2019-09-18 18:00:00-06   │
-                                └──────────────────────────┴──────────────────────────┘
-                            </code>
-                        </pre>
+                                <code data-trim class="language-sql" style="font-size: x-large;">
+                                    D select max(datetime), min(datetime) from 'naip.parquet';
+                                    ┌──────────────────────────┬──────────────────────────┐
+                                    │      max(datetime)       │      min(datetime)       │
+                                    │ timestamp with time zone │ timestamp with time zone │
+                                    ├──────────────────────────┼──────────────────────────┤
+                                    │ 2022-08-27 10:00:00-06   │ 2019-09-18 18:00:00-06   │
+                                    └──────────────────────────┴──────────────────────────┘
+                                </code>
+                            </pre>
                     </section>
                     <section>
                         <h2>Data are smaller</h2>
@@ -499,14 +492,31 @@
                         <h2>stac-fastapi-geoparquet full-scan</h2>
 
                         <img
-                            src="img/labs-375-single-search.png"
+                            src="img/stac-fastapi-geoparquet-experiment.excalidraw.png"
                             class="r-stretch"
                         />
+
+                        <p style="font-size: large">
+                            <a
+                                href="https://github.com/developmentseed/labs-375-stac-geoparquet-backend/"
+                                >https://github.com/developmentseed/labs-375-stac-geoparquet-backend/</a
+                            >
+                        </p>
                     </section>
                     <section>
                         <h2>stac-fastapi-geoparquet search</h2>
 
-                        <img src="img/labs-375-searching-attributes.png" />
+                        <img
+                            src="img/stac-fastapi-geoparquet-experiment-attributes.excalidraw.png"
+                            class="r-stretch"
+                        />
+
+                        <p style="font-size: large">
+                            <a
+                                href="https://github.com/developmentseed/labs-375-stac-geoparquet-backend/"
+                                >https://github.com/developmentseed/labs-375-stac-geoparquet-backend/</a
+                            >
+                        </p>
                     </section>
                     <section>
                         <h2>ITS_LIVE</h2>
@@ -517,9 +527,10 @@
                         </p>
                         <pre>
                             <code data-trim class="language-sql" style="font-size: small;">
-                                D select id from
-                                  read_parquet('s3://stac-fastapi-geoparquet-labs-375/its-live-partitioned-sorted/**/*.parquet')
-                                  where id = '2008-12-31T19:26:47Z-LE07_L1GT_116115_20081215_20200912_02_T2_X_LE07_L1GT_114115_20090118_20200912_02_T2_G0120V02_P097';
+                                D copy (select * from
+                                      (select * replace concat_ws('-', strftime(datetime, '%Y-%m-%dT%H:%M:%SZ'), id) as id
+                                        from read_parquet('its-live-partitioned/**/*.parquet'))
+                                      order by id) to 'its-live-partitioned-sorted' (format parquet, partition_by (year));
                             </code>
                         </pre>
 
@@ -645,20 +656,58 @@
                     <section>
                         <h2>Tooling</h2>
 
-                        <ul>
-                            <li><a href="https://duckdb.org/">DuckDB</a></li>
-                            <li>
-                                <a
-                                    href="https://github.com/stac-utils/stac-geoparquet"
-                                    >stac-geoparquet</a
-                                >
-                            </li>
-                            <li>
-                                <a href="https://github.com/stac-utils/rustac"
-                                    >rustac</a
-                                >
-                            </li>
-                        </ul>
+                        <table style="font-size: x-large">
+                            <thead>
+                                <tr>
+                                    <th style="width: 25%">Name</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <a
+                                            href="https://github.com/stac-utils/stac-geoparquet"
+                                            >stac-geoparquet</a
+                                        >
+                                    </td>
+                                    <td>
+                                        Original reference implementation.
+                                        Mature API for streaming, snapshotting
+                                        <strong>pgstac</strong>, going to Delta
+                                        Lake, and more.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a
+                                            href="https://github.com/stac-utils/rustac"
+                                            >rustac</a
+                                        >
+                                    </td>
+                                    <td>
+                                        Lower-level Python API and CLI, async
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a href="https://duckdb.org/">DuckDB</a>
+                                    </td>
+                                    <td>
+                                        Good for reading, querying, and
+                                        re-partitioning
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a href="https://geopandas.org/"
+                                            >GeoPandas</a
+                                        >
+                                    </td>
+                                    <td>You know it, you love it</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </section>
                     <section>
                         <h2>stac-map</h2>
@@ -668,6 +717,10 @@
                             class="r-stretch"
                         />
 
+                        <p style="font-size: large">
+                            Visualize <strong>stac-geoparquet</strong> in your
+                            browser, uses Deck.gl and DuckDB.
+                        </p>
                         <p style="font-size: large">
                             <a href="https://developmentseed.org/stac-map"
                                 >https://developmentseed.org/stac-map</a
@@ -681,6 +734,13 @@
                             src="img/stac-map-for-geoparquet-search.gif"
                             class="r-stretch"
                         />
+
+                        <p style="font-size: large">
+                            Download search results as
+                            <strong>stac-geoparquet</strong>, and upload
+                            <strong>stac-geoparquet</strong> from your local
+                            filesystem into your browser.
+                        </p>
 
                         <p style="font-size: large">
                             <a href="https://developmentseed.org/stac-map"
@@ -712,7 +772,12 @@
                         />
 
                         <p style="font-size: x-large">
-                            Complete spec move to
+                            <a
+                                href="https://radiantearth.github.io/stac-geoparquet-spec"
+                            >
+                                https://radiantearth.github.io/stac-geoparquet-spec
+                            </a>
+                            <br />
                             <a
                                 href="https://github.com/radiantearth/stac-geoparquet-spec"
                             >
@@ -722,16 +787,27 @@
                     </section>
                     <section>
                         <h2>More examples and documentation!</h2>
+
+                        <img
+                            src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExb2tiMXZ3cXc1NTJrMXMweG9xNnIyMHFvcmd0ZG84NHFrenl1Y2NuNSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/XIqCQx02E1U9W/giphy.gif"
+                            height="200"
+                        />
                     </section>
                     <section>
-                        <h2>Release v1</h2>
+                        <h2>Push to v1</h2>
 
                         <p>⛵︎</p>
 
                         <p style="font-size: x-large">
-                            Open questions around including an optional generic
-                            JSON blob in the recommended schema, how we handle
-                            assets, and more.
+                            Open questions around a
+                            <a
+                                href="https://github.com/radiantearth/stac-geoparquet-spec/issues/11"
+                                >"catch-all" properties column</a
+                            >, how we handle
+                            <a
+                                href="https://github.com/radiantearth/stac-geoparquet-spec/issues/5"
+                                >assets</a
+                            >, and more.
                         </p>
 
                         <p style="font-size: x-large">
@@ -745,9 +821,29 @@
                     </section>
                 </section>
                 <section>
-                    <h2>Fin</h2>
+                    <h2>
+                        Cloud-Native Geospatial Metadata with stac-geoparquet
+                    </h2>
 
-                    <p>Thank you for your time</p>
+                    <h3 class="handwriting">a.k.a. "Pragmatic STAC"</h3>
+
+                    <img src="img/stac-geoparquet.png" height="200" />
+
+                    <p style="font-size: large">
+                        <a
+                            href="https://www.gadom.ski/presentations/2025-11-04-stac-geoparquet.html"
+                            >https://www.gadom.ski/presentations/2025-11-04-stac-geoparquet.html</a
+                        >
+                    </p>
+
+                    <p style="font-size: large">
+                        <a href="https://github.com/gadomski/">@gadomski</a> on
+                        Github |
+                        <a href="https://bsky.app/profile/gadom.ski"
+                            >gadom.ski</a
+                        >
+                        on Bluesky
+                    </p>
                 </section>
             </div>
         </div>
@@ -756,6 +852,7 @@
         <script src="plugin/notes/notes.js"></script>
         <script src="plugin/markdown/markdown.js"></script>
         <script src="plugin/highlight/highlight.js"></script>
+        <script src="plugin/mermaid/mermaid.js"></script>
         <script>
             // More info about initialization & config:
             // - https://revealjs.com/initialization/
@@ -764,11 +861,13 @@
                 hash: true,
 
                 // Learn about plugins: https://revealjs.com/plugins/
-                plugins: [RevealMarkdown, RevealHighlight, RevealNotes],
+                plugins: [
+                    RevealMarkdown,
+                    RevealHighlight,
+                    RevealNotes,
+                    RevealMermaid,
+                ],
             });
-        </script>
-        <script type="module">
-            import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
         </script>
     </body>
 </html>
