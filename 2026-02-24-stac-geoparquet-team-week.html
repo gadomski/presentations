@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+
+        <title>stac-geoparquet and eoAPI</title>
+
+        <link rel="stylesheet" href="dist/reset.css" />
+        <link rel="stylesheet" href="dist/reveal.css" />
+        <link rel="stylesheet" href="dist/theme/devseed.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap"
+            rel="stylesheet"
+        />
+
+        <!-- Theme used for syntax highlighted code -->
+        <link rel="stylesheet" href="plugin/highlight/monokai.css" />
+
+        <style>
+            @font-face {
+                font-family: xkcd-script;
+                src: url("https://cdn.jsdelivr.net/gh/ipython/xkcd-font@master/xkcd-script/font/xkcd-script.woff")
+                    format("woff");
+            }
+            h3.handwriting,
+            p.handwriting {
+                font-family: "xkcd-script", "Shadows Into Light", cursive;
+                font-style: normal;
+                color: #d04200;
+            }
+            .reveal .mermaid {
+                box-shadow: none;
+            }
+        </style>
+        <link rel="icon" type="image/png" href="img/stac-geoparquet.png" />
+    </head>
+    <body>
+        <div class="reveal">
+            <div class="slides">
+                <section>
+                    <h2>stac-geoparquet and eoAPI</h2>
+
+                    <div
+                        style="
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            gap: 0.5em;
+                        "
+                    >
+                        <img src="img/stac-geoparquet.png" height="200" />
+                        +
+                        <img
+                            src="https://github.com/developmentseed/eoAPI/raw/main/docs/logos/eoAPI.png"
+                            height="200"
+                        />
+                    </div>
+                </section>
+                <section>
+                    <h2>stac-geoparquet specification</h2>
+
+                    <img
+                        src="img/stac-data-storage.excalidraw.png"
+                        class="r-stretch"
+                    />
+
+                    <p style="font-size: x-large">
+                        Initial commit May 2022 by Tom Augspurger
+                    </p>
+
+                    <p style="font-size: large">
+                        <a
+                            href="https://github.com/radiantearth/stac-geoparquet-spec"
+                            >https://github.com/radiantearth/stac-geoparquet-spec</a
+                        >
+                    </p>
+                </section>
+                <section>
+                    <h2>stac-geoparquet in eoAPI</h2>
+                    <img
+                        src="img/eoapi-stac-geoparquet.excalidraw.png"
+                        class="r-stretch"
+                    />
+                    <img src="img/pepe-silvia.jpg" height="150" />
+                </section>
+                <section>
+                    <section>
+                        <h2>Uses of STAC</h2>
+
+                        <img
+                            src="img/uses-of-stac.excalidraw.png"
+                            class="r-stretch"
+                        />
+                    </section>
+                    <section>
+                        <h2>Modes and uses</h2>
+
+                        <table style="font-size: x-large">
+                            <thead>
+                                <tr>
+                                    <th>Use</th>
+                                    <th>Static</th>
+                                    <th>API</th>
+                                    <th>stac-geoparquet</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Search</td>
+                                    <td>❌</td>
+                                    <td>✅</td>
+                                    <td>⚠️</td>
+                                </tr>
+                                <tr>
+                                    <td>Full scan</td>
+                                    <td>⚠️</td>
+                                    <td>⚠️</td>
+                                    <td>✅</td>
+                                </tr>
+                                <tr>
+                                    <td>Ingest</td>
+                                    <td>✅</td>
+                                    <td>⚠️</td>
+                                    <td>⚠️</td>
+                                </tr>
+                                <tr>
+                                    <td>Near realtime</td>
+                                    <td>⚠️</td>
+                                    <td>❌</td>
+                                    <td>⚠️</td>
+                                </tr>
+                                <tr>
+                                    <td>Cost and complexity</td>
+                                    <td>✅</td>
+                                    <td>⚠️</td>
+                                    <td>✅</td>
+                                </tr>
+                                <tr class="fragment">
+                                    <td>Maturity</td>
+                                    <td>✅</td>
+                                    <td>✅</td>
+                                    <td>⚠️</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>The rise of the machines</h2>
+
+                        <p style="font-size: xx-large">
+                            Large, statically hosted datasets that rich text
+                            descriptions can be quite useful when fed to a
+                            robot.
+                        </p>
+
+                        <img src="img/bender-rodriguez.png" class="r-stretch" />
+
+                        <p style="font-size: large">
+                            By
+                            <a
+                                rel="nofollow"
+                                class="external free"
+                                href="https://eleven.com.au/futurama-characters.html"
+                                >https://eleven.com.au/futurama-characters.html</a
+                            >,
+                            <a
+                                href="//en.wikipedia.org/wiki/File:Bender_Rodriguez.png"
+                                title="Fair use of copyrighted material in the context of Bender (Futurama)"
+                                >Fair use</a
+                            >,
+                            <a
+                                href="https://en.wikipedia.org/w/index.php?curid=18172404"
+                                >Link</a
+                            >
+                        </p>
+                    </section>
+                    <section>
+                        <img
+                            src="img/one-stac-to-rule-them-all.excalidraw.png"
+                            class="r-stretch"
+                        />
+                        <img
+                            src="img/one-stac-to-rule-them-all.jpg"
+                            height="200"
+                        />
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>Tooling</h2>
+
+                        <table style="font-size: x-large">
+                            <thead>
+                                <tr>
+                                    <th style="width: 40%">Name</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <a
+                                            href="https://github.com/stac-utils/stac-geoparquet"
+                                            >stac-utils/stac-geoparquet</a
+                                        >
+                                    </td>
+                                    <td>
+                                        Original reference implementation,
+                                        streaming, snapshotting
+                                        <strong>pgstac</strong>, Delta Lake
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a
+                                            href="https://github.com/stac-utils/rustac"
+                                            >stac-utils/rustac</a
+                                        >
+                                        (née <strong>stac-rs</strong>)
+                                    </td>
+                                    <td>
+                                        Lower-level, Python and CLI, async, STAC
+                                        search directly on
+                                        <strong>stac-geoparquet</strong> files
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a
+                                            href="https://github.com/stac-utils/stac-fastapi-geoparquet/"
+                                            >stac-utils/stac-fastapi-geoparquet</a
+                                        >
+                                    </td>
+                                    <td>
+                                        Search and discovery for
+                                        <strong>stac-geoparquet</strong> files
+                                        through an HTTP API (experimental)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a href="https://duckdb.org/">DuckDB</a>
+                                    </td>
+                                    <td>
+                                        Reading, querying, and re-partitioning
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a href="https://geopandas.org/"
+                                            >GeoPandas</a
+                                        >
+                                    </td>
+                                    <td>You know it, you love it</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                    <section>
+                        <h2>stac-map</h2>
+
+                        <img
+                            src="img/stac-map-for-geoparquet.gif"
+                            class="r-stretch"
+                        />
+
+                        <p style="font-size: large">
+                            Visualize <strong>stac-geoparquet</strong> in your
+                            browser, uses Deck.gl and DuckDB.
+                        </p>
+                        <p style="font-size: large">
+                            <a href="https://developmentseed.org/stac-map"
+                                >https://developmentseed.org/stac-map</a
+                            >
+                        </p>
+                    </section>
+                </section>
+                <section>
+                    <h2>Examples</h2>
+
+                    <ul style="font-size: x-large">
+                        <li>
+                            <a href="http://stac-geoparquet.labs.eoapi.dev/"
+                                >http://stac-geoparquet.labs.eoapi.dev/</a
+                            >
+                        </li>
+                        <li>
+                            <a
+                                href="https://github.com/developmentseed/stac-fastapi-geoparquet-examples"
+                            >
+                                https://github.com/developmentseed/stac-fastapi-geoparquet-examples
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                href="https://390960605471-t3zssgib.us-west-2.console.aws.amazon.com/s3/buckets/stac-geoparquet-examples?region=us-west-2&tab=objects"
+                                >s3 bucket</a
+                            >
+                        </li>
+                        <li>
+                            <a
+                                href="https://390960605471-t3zssgib.us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/resources?filteringText=&filteringStatus=active&viewNested=true&stackId=arn%3Aaws%3Acloudformation%3Aus-west-2%3A390960605471%3Astack%2Fstac-fastapi-geoparquet-examples%2Fd7cfcf70-f65c-11f0-9378-06c4d1cd1dd9"
+                            >
+                                CloudFormation stack
+                            </a>
+                        </li>
+                    </ul>
+                </section>
+            </div>
+        </div>
+
+        <script src="dist/reveal.js"></script>
+        <script src="plugin/notes/notes.js"></script>
+        <script src="plugin/markdown/markdown.js"></script>
+        <script src="plugin/highlight/highlight.js"></script>
+        <script src="plugin/mermaid/mermaid.js"></script>
+        <script>
+            // More info about initialization & config:
+            // - https://revealjs.com/initialization/
+            // - https://revealjs.com/config/
+            Reveal.initialize({
+                hash: true,
+
+                // Learn about plugins: https://revealjs.com/plugins/
+                plugins: [
+                    RevealMarkdown,
+                    RevealHighlight,
+                    RevealNotes,
+                    RevealMermaid,
+                ],
+            });
+        </script>
+    </body>
+</html>
