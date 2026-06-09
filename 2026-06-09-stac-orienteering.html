@@ -1,0 +1,1190 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+
+        <title>STAC orienteering</title>
+
+        <link rel="stylesheet" href="dist/reset.css" />
+        <link rel="stylesheet" href="dist/reveal.css" />
+        <link rel="stylesheet" href="dist/theme/devseed.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap"
+            rel="stylesheet"
+        />
+
+        <!-- Theme used for syntax highlighted code -->
+        <link rel="stylesheet" href="plugin/highlight/monokai.css" />
+
+        <style>
+            @font-face {
+                font-family: xkcd-script;
+                src: url("https://cdn.jsdelivr.net/gh/ipython/xkcd-font@master/xkcd-script/font/xkcd-script.woff")
+                    format("woff");
+            }
+            h3.handwriting,
+            p.handwriting {
+                font-family: "xkcd-script", "Shadows Into Light", cursive;
+                font-style: normal;
+                color: #d04200;
+            }
+            .reveal .mermaid {
+                box-shadow: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="reveal">
+            <div class="slides">
+                <section>
+                    <h2>STAC <del>roadmap</del> orienteering</h2>
+
+                    <img src="img/stac-orienteering.svg" />
+                    <p style="font-size: x-large">Pete Gadomski</p>
+                    <p style="font-size: x-large">
+                        Development Seed, STAC Project Steering Committee member
+                    </p>
+                </section>
+                <section>
+                    <section>
+                        <h2>
+                            What the
+                            <img
+                                src="https://stacspec.org/public/images-original/STAC-01.png"
+                                alt="A STAC logo"
+                                height="125px"
+                                style="vertical-align: middle"
+                            />?
+                        </h2>
+                    </section>
+                    <section>
+                        <h2>
+                            Open, community specification for geospatial
+                            metadata
+                        </h2>
+
+                        <img
+                            src="./img/stac-spec-contributors.png"
+                            class="r-stretch"
+                        />
+                    </section>
+                    <section>
+                        <h2>Stands on shoulders</h2>
+
+                        <p>
+                            <a
+                                title="Public Record Office of Northern Ireland, No restrictions, via Wikimedia Commons"
+                                href="https://commons.wikimedia.org/wiki/File:Buff_Bill%27s_Circus,_group_of_circus_performers_standing_on_each_other%27s_shoulders_(15341197195).jpg"
+                                ><img
+                                    width="330"
+                                    alt="Buff Bill&#039;s Circus, group of circus performers standing on each other&#039;s shoulders (15341197195)"
+                                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Buff_Bill%27s_Circus%2C_group_of_circus_performers_standing_on_each_other%27s_shoulders_%2815341197195%29.jpg/330px-Buff_Bill%27s_Circus%2C_group_of_circus_performers_standing_on_each_other%27s_shoulders_%2815341197195%29.jpg"
+                            /></a>
+                        </p>
+
+                        <p>Based on GeoJSON, aligns with OGC API - Features</p>
+
+                        <p style="font-size: small; margin-top: 6em">
+                            Image credit
+                            <a
+                                href="https://commons.wikimedia.org/wiki/File:Buff_Bill%27s_Circus,_group_of_circus_performers_standing_on_each_other%27s_shoulders_(15341197195).jpg"
+                                >Public Record Office of Northern Ireland</a
+                            >, No restrictions, via Wikimedia Commons
+                        </p>
+                    </section>
+                    <section>
+                        <h2>Three data structures, one API</h2>
+
+                        <img
+                            data-src="./img/stac-entities.excalidraw.png"
+                            class="r-stretch"
+                        />
+                    </section>
+                    <section>
+                        <h2>Extensions for customization</h2>
+
+                        <table style="font-size: large">
+                            <thead>
+                                <tr>
+                                    <th>Extension</th>
+                                    <th>Prefix</th>
+                                    <th>Version</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <a
+                                            href="https://github.com/stac-extensions/eo"
+                                            >Electro-Optical</a
+                                        >
+                                    </td>
+                                    <td>eo</td>
+                                    <td>2.0.0</td>
+                                    <td>
+                                        Snapshot of the Earth, e.g. cloud cover
+                                        and spectral bands
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a
+                                            href="https://github.com/stac-extensions/file"
+                                            >File Info</a
+                                        >
+                                    </td>
+                                    <td>file</td>
+                                    <td>2.1.0</td>
+                                    <td>
+                                        File size, data type and checksum for
+                                        assets and links
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a
+                                            href="https://github.com/stac-extensions/landsat"
+                                            >Landsat</a
+                                        >
+                                    </td>
+                                    <td>landsat</td>
+                                    <td>2.0.0</td>
+                                    <td>Landsat data fields</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a
+                                            href="https://github.com/stac-extensions/projection"
+                                            >Projection</a
+                                        >
+                                    </td>
+                                    <td>proj</td>
+                                    <td>2.0.0</td>
+                                    <td>
+                                        Items whose assets are in a geospatial
+                                        projection
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a
+                                            href="https://github.com/stac-extensions/sar"
+                                            >SAR</a
+                                        >
+                                    </td>
+                                    <td>sar</td>
+                                    <td>1.3.1</td>
+                                    <td>
+                                        Synthetic-aperture radar for a single
+                                        date and time
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a
+                                            href="https://github.com/stac-extensions/sat"
+                                            >Satellite</a
+                                        >
+                                    </td>
+                                    <td>sat</td>
+                                    <td>1.2.0</td>
+                                    <td>
+                                        Metadata for data collected from
+                                        satellites
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a
+                                            href="https://github.com/stac-extensions/scientific"
+                                            >Scientific Citation</a
+                                        >
+                                    </td>
+                                    <td>sci</td>
+                                    <td>1.0.0</td>
+                                    <td>
+                                        How data should be cited or referenced
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a
+                                            href="https://github.com/stac-extensions/view"
+                                            >View Geometry</a
+                                        >
+                                    </td>
+                                    <td>view</td>
+                                    <td>1.1.0</td>
+                                    <td>
+                                        Angles of sensors and other radiance
+                                        angles
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <p style="font-size: medium">
+                            <a href="https://stac-extensions.github.io/"
+                                >And many more...</a
+                            >
+                        </p>
+                    </section>
+                    <section>
+                        <h2>Batteries included</h2>
+
+                        <table style="font-size: large">
+                            <thead>
+                                <tr>
+                                    <th>Tool</th>
+                                    <th>Language</th>
+                                    <th>Stars<sup>1</sup></th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <a
+                                            href="https://github.com/stac-utils/pystac"
+                                            >pystac</a
+                                        >
+                                    </td>
+                                    <td>Python</td>
+                                    <td>447</td>
+                                    <td>
+                                        Python library for working with any STAC
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a
+                                            href="https://github.com/stac-utils/stac-fastapi"
+                                            >stac-fastapi</a
+                                        >
+                                    </td>
+                                    <td>Python</td>
+                                    <td>316</td>
+                                    <td>
+                                        STAC API implementation with FastAPI
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a
+                                            href="https://github.com/stac-utils/pgstac"
+                                            >pgstac</a
+                                        >
+                                    </td>
+                                    <td>PLpgSQL</td>
+                                    <td>213</td>
+                                    <td>
+                                        Storing and accessing STAC in PostgreSQL
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a
+                                            href="https://github.com/stac-utils/pystac-client"
+                                            >pystac-client</a
+                                        >
+                                    </td>
+                                    <td>Python</td>
+                                    <td>199</td>
+                                    <td>
+                                        Python client for searching STAC APIs
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a
+                                            href="https://github.com/stac-utils/rustac"
+                                            >rustac</a
+                                        >
+                                    </td>
+                                    <td>Rust</td>
+                                    <td>141</td>
+                                    <td>
+                                        The power of Rust for the STAC ecosystem
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a
+                                            href="https://github.com/stac-utils/stac-geoparquet"
+                                            >stac-geoparquet</a
+                                        >
+                                    </td>
+                                    <td>Python</td>
+                                    <td>137</td>
+                                    <td>
+                                        Convert STAC items to/from GeoParquet
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a
+                                            href="https://github.com/stac-utils/titiler-pgstac"
+                                            >titiler-pgstac</a
+                                        >
+                                    </td>
+                                    <td>Python</td>
+                                    <td>120</td>
+                                    <td>TiTiler + PgSTAC</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a
+                                            href="https://github.com/stac-utils/stactools"
+                                            >stactools</a
+                                        >
+                                    </td>
+                                    <td>Python</td>
+                                    <td>112</td>
+                                    <td>
+                                        Command line utility and Python library
+                                        for STAC
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a
+                                            href="https://github.com/stac-utils/stac-fastapi-pgstac"
+                                            >stac-fastapi-pgstac</a
+                                        >
+                                    </td>
+                                    <td>Python</td>
+                                    <td>103</td>
+                                    <td>
+                                        PostgreSQL backend for stac-fastapi
+                                        using pgstac
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <p style="font-size: medium">
+                            <a href="https://stac-utils.github.io/"
+                                >And many more...</a
+                            >
+                        </p>
+
+                        <p style="font-size: small">
+                            <sup>1</sup> GitHub stars as of 2026-06-09
+                        </p>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>
+                            <img
+                                src="https://stacspec.org/public/images-original/STAC-01.png"
+                                alt="A STAC logo"
+                                height="125px"
+                                style="vertical-align: middle"
+                            />
+                            Governance
+                        </h2>
+                    </section>
+                    <section>
+                        <h2>Project Steering Committee (PSC)</h2>
+
+                        <blockquote style="font-size: large">
+                            (M)akes decisions on STAC and STAC API project
+                            issues. STAC is concerned with the following GitHub
+                            repositories and organizations:
+                            <br />
+
+                            <ul>
+                                <li>stac-spec</li>
+                                <li>stac-api-spec</li>
+                                <li>stac-extensions</li>
+                                <li>stac-api-extensions</li>
+                            </ul>
+                        </blockquote>
+                    </section>
+                    <section>
+                        <h2>Current PSC</h2>
+                        <div
+                            style="
+                                display: flex;
+                                flex-wrap: wrap;
+                                justify-content: center;
+                                gap: 0.75em 1.5em;
+                            "
+                        >
+                            <div style="text-align: center">
+                                <img
+                                    src="https://github.com/m-mohr.png?size=200"
+                                    alt="Matthias Mohr"
+                                    style="
+                                        width: 140px;
+                                        height: 140px;
+                                        border-radius: 50%;
+                                        object-fit: cover;
+                                    "
+                                />
+                                <div style="font-size: large">
+                                    Matthias Mohr (Chair)
+                                </div>
+                                <div style="font-size: medium; opacity: 0.7">
+                                    moreGeo
+                                </div>
+                            </div>
+                            <div style="text-align: center">
+                                <img
+                                    src="https://github.com/alexgleith.png?size=200"
+                                    alt="Alex Leith"
+                                    style="
+                                        width: 140px;
+                                        height: 140px;
+                                        border-radius: 50%;
+                                        object-fit: cover;
+                                    "
+                                />
+                                <div style="font-size: large">Alex Leith</div>
+                                <div style="font-size: medium; opacity: 0.7">
+                                    Auspatious
+                                </div>
+                            </div>
+                            <div style="text-align: center">
+                                <img
+                                    src="https://github.com/emmanuelmathot.png?size=200"
+                                    alt="Emmanuel Mathot"
+                                    style="
+                                        width: 140px;
+                                        height: 140px;
+                                        border-radius: 50%;
+                                        object-fit: cover;
+                                    "
+                                />
+                                <div style="font-size: large">
+                                    Emmanuel Mathot
+                                </div>
+                                <div style="font-size: medium; opacity: 0.7">
+                                    Development Seed
+                                </div>
+                            </div>
+                            <div style="text-align: center">
+                                <img
+                                    src="https://github.com/jsignell.png?size=200"
+                                    alt="Julia Signell"
+                                    style="
+                                        width: 140px;
+                                        height: 140px;
+                                        border-radius: 50%;
+                                        object-fit: cover;
+                                    "
+                                />
+                                <div style="font-size: large">
+                                    Julia Signell
+                                </div>
+                                <div style="font-size: medium; opacity: 0.7">
+                                    <del>Element 84</del> Development Seed
+                                </div>
+                            </div>
+                            <div style="text-align: center">
+                                <img
+                                    src="https://github.com/matthewhanson.png?size=200"
+                                    alt="Matthew Hanson"
+                                    style="
+                                        width: 140px;
+                                        height: 140px;
+                                        border-radius: 50%;
+                                        object-fit: cover;
+                                    "
+                                />
+                                <div style="font-size: large">
+                                    Matthew Hanson
+                                </div>
+                                <div style="font-size: medium; opacity: 0.7">
+                                    LGND AI
+                                </div>
+                            </div>
+                            <div style="text-align: center">
+                                <img
+                                    src="https://github.com/PowerChell.png?size=200"
+                                    alt="Michelle Roby"
+                                    style="
+                                        width: 140px;
+                                        height: 140px;
+                                        border-radius: 50%;
+                                        object-fit: cover;
+                                    "
+                                />
+                                <div style="font-size: large">
+                                    Michelle Roby
+                                </div>
+                                <div style="font-size: medium; opacity: 0.7">
+                                    Radiant Earth
+                                </div>
+                            </div>
+                            <div style="text-align: center">
+                                <img
+                                    src="https://github.com/gadomski.png?size=200"
+                                    alt="Pete Gadomski"
+                                    style="
+                                        width: 140px;
+                                        height: 140px;
+                                        border-radius: 50%;
+                                        object-fit: cover;
+                                    "
+                                />
+                                <div style="font-size: large">
+                                    Pete Gadomski
+                                </div>
+                                <div style="font-size: medium; opacity: 0.7">
+                                    Development Seed
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <section>
+                        <h2>OGC Community Standard</h2>
+
+                        <p>October 2025</p>
+
+                        <img
+                            src="img/stac-ogc-community-standard.png"
+                            class="r-stretch"
+                        />
+                    </section>
+                    <section>
+                        <h2>Software and extension maintainership</h2>
+
+                        <a
+                            title="McLOUGHLIN BRO&#039;S, Public domain, via Wikimedia Commons"
+                            href="https://commons.wikimedia.org/wiki/File:A_Peep_At_Buffalo_Bill%27s_Wild_West_(1887)_cover.jpg"
+                            ><img
+                                width="250"
+                                alt="Cover of a book."
+                                src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/A_Peep_At_Buffalo_Bill%27s_Wild_West_%281887%29_cover.jpg/250px-A_Peep_At_Buffalo_Bill%27s_Wild_West_%281887%29_cover.jpg"
+                        /></a>
+
+                        <p style="font-size: small">
+                            <a
+                                href="https://commons.wikimedia.org/wiki/File:A_Peep_At_Buffalo_Bill%27s_Wild_West_(1887)_cover.jpg"
+                                >McLOUGHLIN BRO&#039;S</a
+                            >, Public domain, via Wikimedia Commons
+                        </p>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>STAC <del>Roadmap</del> Orienteering</h2>
+                        <img src="img/stac-orienteering.svg" />
+                    </section>
+                    <section>
+                        <h2>STAC v1.1</h2>
+
+                        <p>Released September 2024</p>
+
+                        <ul>
+                            <li>Bands</li>
+                            <li>License</li>
+                            <li>Common metadata</li>
+                            <li>Links</li>
+                            <li>Item assets</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h2>Tooling support is WIP 🚧</h2>
+
+                        <img src="img/pystac-v1.1.png" class="r-stretch" />
+                    </section>
+                    <section>
+                        <h2>STAC v1.2</h2>
+
+                        <img src="img/stac-v1.2.png" class="r-stretch" />
+                    </section>
+                    <section>
+                        <h2>STAC v2.0 💥</h2>
+
+                        <img src="img/stac-v2.0.png" class="r-stretch" />
+                    </section>
+                    <section>
+                        <h2>Does OGC blessing change things?</h2>
+
+                        <p class="fragment">No</p>
+
+                        <a
+                            title="Siena College, CC BY 2.0 &lt;https://creativecommons.org/licenses/by/2.0&gt;, via Wikimedia Commons"
+                            href="https://commons.wikimedia.org/wiki/File:Blessing_of_the_Animals_(4705876747).jpg"
+                            ><img
+                                width="250"
+                                alt="Blessing of the Animals (4705876747)"
+                                src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Blessing_of_the_Animals_%284705876747%29.jpg/250px-Blessing_of_the_Animals_%284705876747%29.jpg"
+                        /></a>
+
+                        <p style="font-size: small">
+                            <a
+                                href="https://commons.wikimedia.org/wiki/File:Blessing_of_the_Animals_(4705876747).jpg"
+                                >Siena College</a
+                            >,
+                            <a
+                                href="https://creativecommons.org/licenses/by/2.0"
+                                >CC BY 2.0</a
+                            >, via Wikimedia Commons
+                        </p>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>How do I propose changes?</h2>
+
+                        <p>Open a PR or an issue</p>
+                    </section>
+                    <section>
+                        <h2>What if things are too slow?</h2>
+
+                        <ul style="font-size: xx-large">
+                            <li>Ping in Cloud-Native Geospatial Slack</li>
+                            <li>Ping the maintainer(s) directly</li>
+                            <li>
+                                If it's a spec issue, ping the PSC:
+                                <a href="mailto:stac-psc@radiant.earth"
+                                    >stac-psc@radiant.earth</a
+                                >
+                            </li>
+                            <li class="fragment">🙈 Insert money</li>
+                        </ul>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>A digression...</h2>
+
+                        <img
+                            src="https://imgs.xkcd.com/comics/dependency_2x.png"
+                            class="r-stretch"
+                        />
+
+                        <p style="font-size: medium">
+                            <a href="https://xkcd.com/2347/"
+                                >https://xkcd.com/2347/</a
+                            >
+                        </p>
+                    </section>
+                    <section>
+                        <img
+                            src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNGcwazV5bHcyNmNuN21idmk4ajJ5ZWYyaGgxc2xrNHNiODU0NW91ZSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/9rifMAArlN3I91PzIm/giphy.gif"
+                            class="r-stretch"
+                        />
+
+                        <p style="text-align: center; font-size: medium">
+                            <a
+                                title="Microsoft, Public domain, via Wikimedia Commons"
+                                href="https://commons.wikimedia.org/wiki/File:Microsoft_logo.svg"
+                                ><img
+                                    height="150"
+                                    alt="Logo of Microsoft Corporation"
+                                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Microsoft_logo.svg/250px-Microsoft_logo.svg.png"
+                                    style="vertical-align: middle"
+                            /></a>
+                            <a
+                                title="NASA, Public domain, via Wikimedia Commons"
+                                href="https://commons.wikimedia.org/wiki/File:NASA-Logo.svg"
+                                ><img
+                                    height="150"
+                                    alt="National Aeronautics and Space Administration (NASA) Logo"
+                                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/NASA-Logo.svg/250px-NASA-Logo.svg.png"
+                                    style="vertical-align: middle"
+                            /></a>
+                            <a
+                                title="ESA_logo.svg: ESA
+                derivative work: Ssolbergj, Public domain, via Wikimedia Commons"
+                                href="https://commons.wikimedia.org/wiki/File:ESA_logo_simple.svg"
+                                ><img
+                                    width="150"
+                                    alt="ESA logo simple"
+                                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/ESA_logo_simple.svg/250px-ESA_logo_simple.svg.png"
+                                    style="vertical-align: middle"
+                            /></a>
+                            <a
+                                title="CNES, Public domain, via Wikimedia Commons"
+                                href="https://commons.wikimedia.org/wiki/File:Logo_CNES_2017_triangulaire_bleu.png"
+                                ><img
+                                    width="150"
+                                    alt="Logo CNES 2017 triangulaire bleu"
+                                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Logo_CNES_2017_triangulaire_bleu.png/330px-Logo_CNES_2017_triangulaire_bleu.png"
+                                    style="vertical-align: middle"
+                            /></a>
+                            <a href="https://vito.be/">
+                                <img
+                                    width="150"
+                                    src="https://vito.be/themes/custom/vitotheme/logo.svg"
+                                    style="vertical-align: middle"
+                                />
+                            </a>
+                            <span style="margin-left: 1em">et al.... </span>
+                        </p>
+
+                        <p style="font-size: small">
+                            <a
+                                href="https://commons.wikimedia.org/wiki/File:Microsoft_logo.svg"
+                                >Microsoft</a
+                            >, Public domain, via Wikimedia Commons |
+                            <a
+                                href="https://commons.wikimedia.org/wiki/File:NASA-Logo.svg"
+                                >NASA</a
+                            >, Public domain, via Wikimedia Commons |
+                            <a
+                                href="https://commons.wikimedia.org/wiki/File:ESA_logo_simple.svg"
+                                >ESA_logo.svg: ESAderivative work: Ssolbergj</a
+                            >, Public domain, via Wikimedia Commons |
+                            <a
+                                href="https://commons.wikimedia.org/wiki/File:Logo_CNES_2017_triangulaire_bleu.png"
+                                >CNES</a
+                            >, Public domain, via Wikimedia Commons |
+                            https://vito.be/en
+                        </p>
+                    </section>
+
+                    <section data-visibility="hidden">
+                        <h2>Who maintains it?</h2>
+                        <div
+                            style="
+                                display: flex;
+                                flex-wrap: wrap;
+                                justify-content: center;
+                                gap: 0.5em 1em;
+                            "
+                        >
+                            <div style="text-align: center; width: 150px">
+                                <img
+                                    src="https://github.com/vincentsarago.png?size=200"
+                                    alt="Vincent Sarago"
+                                    style="
+                                        width: 100px;
+                                        height: 100px;
+                                        border-radius: 50%;
+                                        object-fit: cover;
+                                    "
+                                />
+                                <div style="font-size: large">
+                                    <strong>titiler</strong>
+                                </div>
+                                <div style="font-size: small; opacity: 0.7">
+                                    Vincent Sarago
+                                </div>
+                            </div>
+                            <div style="text-align: center; width: 150px">
+                                <img
+                                    src="https://github.com/gadomski.png?size=200"
+                                    alt="Pete Gadomski"
+                                    style="
+                                        width: 100px;
+                                        height: 100px;
+                                        border-radius: 50%;
+                                        object-fit: cover;
+                                    "
+                                />
+                                <div style="font-size: large">
+                                    <strong>pystac</strong>
+                                </div>
+                                <div style="font-size: small; opacity: 0.7">
+                                    Pete Gadomski
+                                </div>
+                            </div>
+                            <div style="text-align: center; width: 150px">
+                                <img
+                                    src="https://github.com/vincentsarago.png?size=200"
+                                    alt="Vincent Sarago"
+                                    style="
+                                        width: 100px;
+                                        height: 100px;
+                                        border-radius: 50%;
+                                        object-fit: cover;
+                                    "
+                                />
+                                <div style="font-size: large">
+                                    <strong>stac-fastapi</strong>
+                                </div>
+                                <div style="font-size: small; opacity: 0.7">
+                                    Vincent Sarago
+                                </div>
+                            </div>
+                            <div style="text-align: center; width: 150px">
+                                <img
+                                    src="https://github.com/bitner.png?size=200"
+                                    alt="David Bitner"
+                                    style="
+                                        width: 100px;
+                                        height: 100px;
+                                        border-radius: 50%;
+                                        object-fit: cover;
+                                    "
+                                />
+                                <div style="font-size: large">
+                                    <strong>pgstac</strong>
+                                </div>
+                                <div style="font-size: small; opacity: 0.7">
+                                    David Bitner
+                                </div>
+                            </div>
+                            <div style="text-align: center; width: 150px">
+                                <img
+                                    src="https://github.com/gadomski.png?size=200"
+                                    alt="Pete Gadomski"
+                                    style="
+                                        width: 100px;
+                                        height: 100px;
+                                        border-radius: 50%;
+                                        object-fit: cover;
+                                    "
+                                />
+                                <div style="font-size: large">
+                                    <strong>pystac-client</strong>
+                                </div>
+                                <div style="font-size: small; opacity: 0.7">
+                                    Pete Gadomski
+                                </div>
+                            </div>
+                            <div style="text-align: center; width: 150px">
+                                <img
+                                    src="https://github.com/gadomski.png?size=200"
+                                    alt="Pete Gadomski"
+                                    style="
+                                        width: 100px;
+                                        height: 100px;
+                                        border-radius: 50%;
+                                        object-fit: cover;
+                                    "
+                                />
+                                <div style="font-size: large">
+                                    <strong>rustac</strong>
+                                </div>
+                                <div style="font-size: small; opacity: 0.7">
+                                    Pete Gadomski
+                                </div>
+                            </div>
+                            <div style="text-align: center; width: 150px">
+                                <img
+                                    src="https://github.com/gadomski.png?size=200"
+                                    alt="Pete Gadomski"
+                                    style="
+                                        width: 100px;
+                                        height: 100px;
+                                        border-radius: 50%;
+                                        object-fit: cover;
+                                    "
+                                />
+                                <div style="font-size: large">
+                                    <strong>stac-geoparquet</strong>
+                                </div>
+                                <div style="font-size: small; opacity: 0.7">
+                                    Pete Gadomski
+                                </div>
+                            </div>
+                            <div style="text-align: center; width: 150px">
+                                <img
+                                    src="https://github.com/vincentsarago.png?size=200"
+                                    alt="Vincent Sarago"
+                                    style="
+                                        width: 100px;
+                                        height: 100px;
+                                        border-radius: 50%;
+                                        object-fit: cover;
+                                    "
+                                />
+                                <div style="font-size: large">
+                                    <strong>titiler-pgstac</strong>
+                                </div>
+                                <div style="font-size: small; opacity: 0.7">
+                                    Vincent Sarago
+                                </div>
+                            </div>
+                            <div style="text-align: center; width: 150px">
+                                <img
+                                    src="https://github.com/gadomski.png?size=200"
+                                    alt="Pete Gadomski"
+                                    style="
+                                        width: 100px;
+                                        height: 100px;
+                                        border-radius: 50%;
+                                        object-fit: cover;
+                                    "
+                                />
+                                <div style="font-size: large">
+                                    <strong>stactools</strong>
+                                </div>
+                                <div style="font-size: small; opacity: 0.7">
+                                    Pete Gadomski
+                                </div>
+                            </div>
+                            <div style="text-align: center; width: 150px">
+                                <img
+                                    src="https://github.com/bitner.png?size=200"
+                                    alt="David Bitner"
+                                    style="
+                                        width: 100px;
+                                        height: 100px;
+                                        border-radius: 50%;
+                                        object-fit: cover;
+                                    "
+                                />
+                                <div style="font-size: large">
+                                    <strong>stac-fastapi-pgstac</strong>
+                                </div>
+                                <div style="font-size: small; opacity: 0.7">
+                                    David Bitner
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section>
+                        <h2>To fork, or not to fork?</h2>
+
+                        <img
+                            class="r-stretch"
+                            alt="A Gingerbread men with fork and knife"
+                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/A_Gingerbread_men_with_fork_and_knife.jpg/330px-A_Gingerbread_men_with_fork_and_knife.jpg"
+                        />
+
+                        <table style="font-size: x-large">
+                            <thead>
+                                <tr>
+                                    <th>Pros</th>
+                                    <th>Cons</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Control over API stability</td>
+                                    <td>
+                                        Harder for subject-matter experts to
+                                        contribute
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Faster release cadence</td>
+                                    <td>
+                                        Slower or impossible uptake of community
+                                        contributions
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Solely responsible for vulnerabilities
+                                        and bug fixes
+                                    </td>
+                                    <td>Sometimes, you get fixes for free</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Complete control of feature
+                                        prioritization
+                                    </td>
+                                    <td>
+                                        You might get features you didn't know
+                                        you wanted
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <p style="font-size: small">
+                            <a
+                                href="https://commons.wikimedia.org/wiki/File:A_Gingerbread_men_with_fork_and_knife.jpg"
+                                >Peachyeung316</a
+                            >,
+                            <a
+                                href="https://creativecommons.org/licenses/by-sa/4.0"
+                                >CC BY-SA 4.0</a
+                            >, via Wikimedia Commons
+                        </p>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>What the Zarr?</h2>
+
+                        <img
+                            src="https://zarr.dev/android-chrome-192x192.png"
+                        />
+                    </section>
+                    <section>
+                        <h2>Data storage <em>and</em> metadata</h2>
+
+                        <img
+                            src="https://zarr-specs.readthedocs.io/en/latest/_images/terminology-hierarchy.excalidraw.png"
+                            class="r-stretch"
+                        />
+
+                        <p style="font-size: small">
+                            <a
+                                href="https://zarr-specs.readthedocs.io/en/latest/v3/core/index.html#concepts-and-terminology"
+                            >
+                                https://zarr-specs.readthedocs.io/en/latest/v3/core/index.html#concepts-and-terminology
+                            </a>
+                        </p>
+                    </section>
+                    <section>
+                        <h2>Not inherently geospatial</h2>
+
+                        <ul style="font-size: x-large">
+                            <li>
+                                GeoZarr
+                                <a
+                                    href="https://www.ogc.org/announcement/ogc-forms-new-geozarr-standards-working-group-to-establish-a-zarr-encoding-for-geospatial-data/"
+                                    >OGC working group</a
+                                >
+                            </li>
+                            <li>
+                                Geospatial
+                                <a href="https://geozarr.org/conventions.html"
+                                    >conventions</a
+                                >
+                                are like extensions
+                            </li>
+                            <li>
+                                <a
+                                    href="https://cloudnativegeo.org/blog/2025/11/stac-zarr-community-sprint-2025-recap/"
+                                >
+                                    STAC + Zarr community sprint 2025 (see
+                                    picture)
+                                </a>
+                            </li>
+                        </ul>
+
+                        <img
+                            src="https://cloudnativegeo.org/images/251025-stac-sprint-group-photo_hu_e0e47057620bcac5.jpg"
+                            class="r-stretch"
+                        />
+                    </section>
+                    <section>
+                        <h2>Zarr + STAC</h2>
+
+                        <p>One Big Zarr (Aligned Data)</p>
+
+                        <img
+                            src="https://element84.com/wp-content/uploads/2025/04/image3-1024x413.png"
+                            class="r-stretch"
+                        />
+
+                        <p style="font-size: small">
+                            <a
+                                href="https://element84.com/software-engineering/zarr-stac/"
+                                >https://element84.com/software-engineering/zarr-stac/</a
+                            >
+                        </p>
+                    </section>
+                    <section>
+                        <h2>Zarr + STAC</h2>
+
+                        <p>Many Smaller Zarrs (Unaligned Data)</p>
+
+                        <img
+                            src="https://element84.com/wp-content/uploads/2025/04/image1-1-1024x418.png"
+                            class="r-stretch"
+                        />
+
+                        <p style="font-size: small">
+                            <a
+                                href="https://element84.com/software-engineering/zarr-stac/"
+                                >https://element84.com/software-engineering/zarr-stac/</a
+                            >
+                        </p>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>What should you be thinking about?</h2>
+
+                        <img
+                            src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExc3loNjkyNDdubWg3ZGdtNnBzc2Y0aG1rOGtpbnp1MzUwOWM0NG1obSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/8acGIeFnqLA7S/giphy.gif"
+                            class="r-stretch"
+                        />
+                    </section>
+                    <section>
+                        <h2>Transactional object storage</h2>
+
+                        <img
+                            src="img/icestac.excalidraw.png"
+                            class="r-stretch"
+                        />
+                    </section>
+                    <section>
+                        <h2>Client-side tiling and visualization</h2>
+
+                        <a
+                            href="https://developmentseed.org/deck.gl-raster/examples/dynamical-zarr-ecmwf/"
+                            target="_blank"
+                        >
+                            <img
+                                src="https://developmentseed.org/deck.gl-raster/assets/images/dynamical-zarr-ecmwf-754acd1042268055dfd5523016de244b.gif"
+                                class="r-stretch"
+                            />
+                        </a>
+                    </section>
+                    <section>
+                        <h2>"AI-ready" geospatial metadata</h2>
+
+                        <img
+                            src="https://upload.wikimedia.org/wikipedia/en/thumb/a/a6/Bender_Rodriguez.png/250px-Bender_Rodriguez.png"
+                            class="r-stretch"
+                        />
+                    </section>
+                    <section>
+                        <h2>Embeddings for search and discovery</h2>
+
+                        <img
+                            src="img/embed-all-the-things.jpg"
+                            class="r-stretch"
+                        />
+                    </section>
+                </section>
+                <section>
+                    <h2>Fin</h2>
+
+                    <img src="img/stac-orienteering.svg" />
+
+                    <p style="font-size: large">
+                        <a
+                            href="https://www.gadom.ski/presentations/2026-06-09-stac-orienteering.html"
+                            >https://www.gadom.ski/presentations/2026-06-09-stac-orienteering.html</a
+                        >
+                    </p>
+
+                    <p style="font-size: large">
+                        <a href="https://github.com/gadomski/">@gadomski</a> on
+                        Github |
+                        <a href="https://bsky.app/profile/gadom.ski"
+                            >gadom.ski</a
+                        >
+                        on Bluesky
+                    </p>
+                </section>
+            </div>
+        </div>
+
+        <script src="dist/reveal.js"></script>
+        <script src="plugin/notes/notes.js"></script>
+        <script src="plugin/markdown/markdown.js"></script>
+        <script src="plugin/highlight/highlight.js"></script>
+        <script src="plugin/mermaid/mermaid.js"></script>
+        <script>
+            // More info about initialization & config:
+            // - https://revealjs.com/initialization/
+            // - https://revealjs.com/config/
+            Reveal.initialize({
+                hash: true,
+
+                // Learn about plugins: https://revealjs.com/plugins/
+                plugins: [
+                    RevealMarkdown,
+                    RevealHighlight,
+                    RevealNotes,
+                    RevealMermaid,
+                ],
+            });
+        </script>
+    </body>
+</html>
