@@ -148,7 +148,7 @@
                     <section>
                         <h2>obstore</h2>
 
-                        <pre><code data-trim data-noescape style="font-size: large;">
+                        <pre><code data-trim data-noescape style="font-size: large;" class="language-python">
                             from obstore.store import S3Store, from_url
 
                             from_url("s3://bucket-name", region="us-east-1", skip_signature=True)
@@ -200,6 +200,45 @@
                         </p>
                     </section>
                     <section>
+                        <h2>rustac (CLI)</h2>
+
+                        <pre><code data-trim data-noescape style="font-size: large;" class="language-bash">
+                            # Search
+                            $ rustac search https://landsatlook.usgs.gov/stac-server \
+                                --collections landsat-c2l2-sr \
+                                --intersects '{"type": "Point", "coordinates": [-105.119, 40.173]}' \
+                                --sortby='-properties.datetime' \
+                                --max-items 1000 \
+                                items.parquet
+
+                            # Translate formats
+                            $ rustac translate items.ndjson items.parquet
+                        </code></pre>
+
+                    </section>
+                    <section>
+                        <h2>rustac (Python)</h2>
+
+                        <pre><code data-trim data-noescape style="font-size: large;" class="language-python">
+                            # Search a STAC API
+                            items = await rustac.search(
+                                "https://landsatlook.usgs.gov/stac-server",
+                                collections="landsat-c2l2-sr",
+                                intersects={"type": "Point", "coordinates": [-105.119, 40.173]},
+                                max_items=100,
+                            )
+
+                            from geopandas import GeoDataFrame
+
+                            table = rustac.to_arrow(items)
+                            data_frame = GeoDataFrame.from_arrow(table)
+                            items = rustac.from_arrow(data_frame.to_arrow())
+
+                            await rustac.write("/tmp/items.parquet", items)
+                        </code></pre>
+
+                    </section>
+                    <section>
                         <h2>Ecosystem architecture</h2>
 
                         <img src="img/stac-geoparquet-software-ecosystem.excalidraw.png" class="r-stretch" />
@@ -217,9 +256,15 @@
                 <section>
                     <h2>Fin</h2>
 
+                    <p>
+                        CNG 🐍 🤝 🦀
+                    </p>
+
                     <p>Thanks for your time!</p>
 
+
                     <p style="font-size: large">
+                        <a href="https://www.gadom.ski/presentations/2026-07-10-cng-python-rust.html">slides</a> |
                         <a href="https://github.com/gadomski/">@gadomski</a> on
                         Github |
                         <a href="https://bsky.app/profile/gadom.ski"
