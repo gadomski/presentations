@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+
+        <title>CNG 🐍 🤝 🦀</title>
+
+        <link rel="stylesheet" href="dist/reset.css" />
+        <link rel="stylesheet" href="dist/reveal.css" />
+        <link rel="stylesheet" href="dist/theme/devseed.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap"
+            rel="stylesheet"
+        />
+
+        <!-- Theme used for syntax highlighted code -->
+        <link rel="stylesheet" href="plugin/highlight/monokai.css" />
+
+        <style>
+            @font-face {
+                font-family: xkcd-script;
+                src: url("https://cdn.jsdelivr.net/gh/ipython/xkcd-font@master/xkcd-script/font/xkcd-script.woff")
+                    format("woff");
+            }
+            h3.handwriting,
+            p.handwriting {
+                font-family: "xkcd-script", "Shadows Into Light", cursive;
+                font-style: normal;
+                color: #d04200;
+            }
+            .reveal .mermaid {
+                box-shadow: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="reveal">
+            <div class="slides">
+                <section>
+                    <h2>High-performance Cloud-Native Geospatial Python packages using Rust</h2>
+
+                    <p style="font-size: xx-large">
+                        CNG 🐍 🤝 🦀
+                    </p>
+
+                    <p style="font-size: x-large">Pete Gadomski, Development Seed</p>
+                </section>
+                <section>
+                    <section>
+                        <h2>
+                            Cloud-Native Geospatial (CNG)
+                        </h2>
+
+                        <img
+                            src="img/cng-logo.png"
+                            height="125px"
+                            style="vertical-align: middle"
+                        />
+
+                        <p>
+                            <a href="https://cloudnativegeo.org/">
+                                https://cloudnativegeo.org/
+                            </a>
+                        </p>
+                    </section>
+                    <section>
+                        <h2>CNG architecture</h2>
+
+                        <img src="img/cng-architecture.excalidraw.png" class="r-stretch" />
+                    </section>
+                    <section>
+                        <h2>CNG data formats</h2>
+
+                        <p>
+                            <ul>
+                                <li>Cloud Optimized GeoTIFF (COG)</li>
+                                <li>Zarr</li>
+                                <li>Cloud Optimized Point Clouds (COPC)</li>
+                                <li>GeoParquet</li>
+                                <li>FlatGeobuf</li>
+                                <li>PMTiles</li>
+                            </ul>
+                        </p>
+
+                        <p>
+                            <a href="https://guide.cloudnativegeo.org/">https://guide.cloudnativegeo.org/</a>
+                        </p>
+                    </section>
+                    <section>
+                        <h2>CNG metadata formats</h2>
+
+                        <p>
+                            Used for search and discovery, can be leveraged for analytics
+                        </p>
+
+                        <p>
+                            <ul>
+                                <li>SpatioTemporal Asset Catalog (STAC)</li>
+                                <li>Zarr (sort of)</li>
+                            </ul>
+                        </p>
+                    </section>
+                    <section>
+                        <h2>STAC</h2>
+
+                        <img src="img/stac-entities.excalidraw.png" class="r-stretch" />
+                    </section>
+                    <section>
+                        <h2>stac-map</h2>
+
+                        <img src="img/stac-map.gif" class="r-stretch" />
+
+                        <p>
+                            <a href="https://developmentseed.org/stac-map/">
+                                https://developmentseed.org/stac-map/
+                            </a>
+                        </p>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>CNG software</h2>
+
+                        <ul>
+                            <li>Python is lingua franca for data analysis and processing</li>
+                            <li>R is used for analysis, less for processing</li>
+                            <li>Often I/O bound, but not always</li>
+                            <li><a href="https://gdal.org">GDAL</a> is the foundation for most (but not all)</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h2>Powering up CNG software with Rust</h2>
+
+                        <ul>
+                            <li><a href="https://pyo3.rs">pyo3</a> has made Python+Rust pretty easy</li>
+                            <li>WASM can allow code re-use to the browser</li>
+                            <li>Sometimes a command-line interface (CLI) is all you need</li>
+                        </ul>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>obstore</h2>
+
+                        <pre><code data-trim data-noescape style="font-size: large;">
+                            from obstore.store import S3Store, from_url
+
+                            from_url("s3://bucket-name", region="us-east-1", skip_signature=True)
+                            from_url("https://bucket-name.s3.us-east-1.amazonaws.com", skip_signature=True)
+                            store = S3Store("bucket-name", region="us-east-1", skip_signature=True)
+                        </code></pre>
+
+                        <a href="https://developmentseed.org/obstore/">
+                            https://developmentseed.org/obstore/
+                        </a>
+
+                        <ul class="fragment" style="margin-top: 1em">
+                            <li>AWS S3</li>
+                            <li>Google Cloud Storage</li>
+                            <li>Microsoft Azure</li>
+                            <li>HTTP</li>
+                            <li>Local</li>
+                            <li>Memory</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h2>Built directly on <strong>object_store</strong></h2>
+
+                        <img src="img/object_store.png" class="r-stretch" />
+
+                        <p>Exposes an almost-identical API</p>
+                    </section>
+                    <section>
+                        <h2>Why?</h2>
+
+                        <ul>
+                            <li>No Python dependencies</li>
+                            <li>async</li>
+                            <li>When making many small requests, can be up to 9x faster throughput than <strong>fsspec</strong></li>
+                            <li>Releases Global Interpreter Lock (GIL) for sync operations</li>
+                        </ul>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>rustac</h2>
+
+                        <img src="img/rustac.png" class="r-stretch" />
+
+                        <p>
+                            <a href="https://stac-utils.github.io/rustac-py">https://stac-utils.github.io/rustac-py/</a>
+                           <br />
+                           <a href="https://stac-utils.github.io/rustac">https://stac-utils.github.io/rustac/</a>
+                        </p>
+                    </section>
+                    <section>
+                        <h2>Ecosystem architecture</h2>
+
+                        <img src="img/stac-geoparquet-software-ecosystem.excalidraw.png" class="r-stretch" />
+                    </section>
+                </section>
+                <section>
+                    <h2>What's next? 👷‍♀️</h2>
+
+                    <ul>
+                        <li><a href="https://developmentseed.org/async-tiff">async-tiff</a> and <a href="https://developmentseed.org/async-geotiff/">async-geotiff</a>: same pattern and no GDAL</li>
+                        <li><a href="https://github.com/developmentseed/zarrista">zarrista</a>: same pattern for Zarr (again, no GDAL)</li>
+                        <li>Rust isn't right for everything, e.g. sometimes pure Typescript can be best</li>
+                    </ul>
+                </section>
+                <section>
+                    <h2>Fin</h2>
+
+                    <p>Thanks for your time!</p>
+
+                    <p style="font-size: large">
+                        <a href="https://github.com/gadomski/">@gadomski</a> on
+                        Github |
+                        <a href="https://bsky.app/profile/gadom.ski"
+                            >gadom.ski</a
+                        >
+                        on Bluesky
+                    </p>
+                </section>
+            </div>
+        </div>
+
+        <script src="dist/reveal.js"></script>
+        <script src="plugin/notes/notes.js"></script>
+        <script src="plugin/markdown/markdown.js"></script>
+        <script src="plugin/highlight/highlight.js"></script>
+        <script src="plugin/mermaid/mermaid.js"></script>
+        <script>
+            // More info about initialization & config:
+            // - https://revealjs.com/initialization/
+            // - https://revealjs.com/config/
+            Reveal.initialize({
+                hash: true,
+
+                // Learn about plugins: https://revealjs.com/plugins/
+                plugins: [
+                    RevealMarkdown,
+                    RevealHighlight,
+                    RevealNotes,
+                    RevealMermaid,
+                ],
+            });
+        </script>
+    </body>
+</html>
