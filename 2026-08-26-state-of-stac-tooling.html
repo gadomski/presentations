@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+
+        <title>State of STAC Tooling</title>
+
+        <link rel="stylesheet" href="dist/reset.css" />
+        <link rel="stylesheet" href="dist/reveal.css" />
+        <link rel="stylesheet" href="dist/theme/devseed.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap"
+            rel="stylesheet"
+        />
+
+        <!-- Theme used for syntax highlighted code -->
+        <link rel="stylesheet" href="plugin/highlight/monokai.css" />
+
+        <style>
+            @font-face {
+                font-family: xkcd-script;
+                src: url("https://cdn.jsdelivr.net/gh/ipython/xkcd-font@master/xkcd-script/font/xkcd-script.woff")
+                    format("woff");
+            }
+            h3.handwriting,
+            p.handwriting {
+                font-family: "xkcd-script", "Shadows Into Light", cursive;
+                font-style: normal;
+                color: #d04200;
+            }
+            .reveal .mermaid {
+                box-shadow: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="reveal">
+            <div class="slides">
+                <section>
+                    <h2>State of STAC Tooling</h2>
+
+                    <img src="img/repair-tool-kit.jpg" class="r-stretch" />
+
+                    <p style="font-size: x-large">
+                        Pete Gadomski, Development Seed
+                    </p>
+
+                    <p style="font-size: small">
+                        Image
+                        <a
+                            href="https://commons.wikimedia.org/wiki/File:Repair_tool_kit.jpg"
+                            >Wilfredor</a
+                        >, CC0, via Wikimedia Commons
+                    </p>
+                </section>
+                <section>
+                    <h2>STAC actors</h2>
+
+                    <img
+                        src="img/stac-actors.excalidraw.png"
+                        class="r-stretch"
+                    />
+
+                    <ul style="font-size: x-large">
+                        <li>
+                            👩‍🍳 <strong>Data providers</strong> produce
+                            geospatial data and index those data with STAC
+                        </li>
+                        <li>
+                            💁 <strong> Developers </strong> build and maintain
+                            infrastructure to serve STAC to the world
+                        </li>
+                        <li>
+                            😋 <strong> Data users </strong> use STAC to find,
+                            visualize, and use geospatial data
+                        </li>
+                    </ul>
+                </section>
+                <section>
+                    <h2>stac-utils</h2>
+
+                    <img src="img/stac-utils.png" class="r-stretch" />
+
+                    <p>
+                        <a href="https://github.com/stac-utils"
+                            >https://github.com/stac-utils</a
+                        >
+                    </p>
+                </section>
+                <section>
+                    <section>
+                        <h2>Visualization</h2>
+
+                        <p>For 😋 <strong> Data users </strong></p>
+                    </section>
+                    <section>
+                        <h2>stac-browser</h2>
+
+                        <img src="img/stac-browser.gif" class="r-stretch" />
+
+                        <p>
+                            <a href="https://browser.moregeo.it"
+                                >https://browser.moregeo.it</a
+                            >
+                        </p>
+                    </section>
+                    <section>
+                        <h2>stac-map</h2>
+
+                        <img src="img/stac-map.gif" class="r-stretch" />
+
+                        <p>
+                            <a href="https://developmentseed.org/stac-map"
+                                >https://developmentseed.org/stac-map</a
+                            >
+                        </p>
+                    </section>
+                    <section>
+                        <h2>QGIS</h2>
+
+                        <img src="img/stac-qgis.gif" class="r-stretch" />
+
+                        <p>
+                            <a href="https://www.qgis.org/">https://www.qgis.org/</a>
+                        </p>
+                    </section>
+                    <section>
+                        <h2>ArcGIS</h2>
+
+                        <img src="img/stac-arcgis.gif" class="r-stretch" />
+
+                        <p>
+                            <a
+                                href="https://doc.esri.com/en/arcgis-pro/latest/help/data/imagery/explore-stac.html"
+                                >ArcGIS documentation</a
+                            >
+                        </p>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>Analysis</h2>
+
+                        <p>For 😋 <strong> Data users </strong></p>
+                    </section>
+                    <section>
+                        <h2>pystac-client</h2>
+
+                        <img
+                            src="img/pystac-client.excalidraw.png"
+                            class="r-stretch"
+                        />
+
+                        <pre><code data-trim data-noescape class="language-python" style="font-size: x-large;">
+                          from pystac_client import Client
+
+                          client = Client.open("https://stac.eoapi.dev")
+                          search = client.search(collections=["MAXAR_yellowstone_flooding22"])
+                          for item in search.items():
+                              print(f"- {item.id}")
+                        </code></pre>
+
+                        <a
+                            href="https://github.com/stac-utils/pystac-client"
+                            style="font-size: large"
+                            >https://github.com/stac-utils/pystac-client</a
+                        >
+                    </section>
+                    <section>
+                        <h2>rustac and stac-geoparquet</h2>
+
+                        <img
+                            src="img/rustac.excalidraw.png"
+                            class="r-stretch"
+                        />
+
+                        <pre><code data-trim data-noescape class="language-python" style="font-size: x-large;">
+                            await rustac.search_to(
+                                "items.parquet",
+                                "https://stac.eoapi.dev",
+                                collections=["MAXAR_yellowstone_flooding22"],
+                            )
+                            for item in await rustac.search("items.parquet"):
+                                print(f"- {item['id']}")
+                        </code></pre>
+
+                        <a
+                            href="https://github.com/stac-utils/rustac-py"
+                            style="font-size: large"
+                            >https://github.com/stac-utils/rustac-py</a
+                        >
+                    </section>
+                    <section>
+                        <h2>DuckDB</h2>
+
+                        <img
+                            src="img/duckdb.excalidraw.png"
+                            class="r-stretch"
+                        />
+
+                        <pre><code data-trim data-noescape class="language-sql" style="font-size: x-large;">
+                        select id from 'items.parquet';
+                        select id from 'https://stac.test/items.parquet';
+                        select id from 's3://mybucket/items.parquet';
+                        </code></pre>
+
+                        <a href="https://duckdb.org/">https://duckdb.org/</a>
+                    </section>
+                    <section>
+                        <h2>odc-stac, stackstac, lazycogs</h2>
+
+                        <img
+                            src="img/stac-datacubes.excalidraw.png"
+                            class="r-stretch"
+                        />
+
+                        <pre><code data-trim data-noescape class="language-python" style="font-size: x-large;">
+                            data_array: xarray.DataArray = lazycogs.open(
+                                "items.parquet",
+                                bbox=bbox,
+                                crs=crs,
+                                resolution=10.0,
+                                bands=["red", "green", "blue", "nir"],
+                            )
+                        </code></pre>
+                    </section>
+                </section>
+                <section>
+                    <h2>Infrastructure</h2>
+
+                    <p>For 💁 <strong> Developers </strong></p>
+
+                    <img
+                        src="img/stac-infrastructure.excalidraw.png"
+                        class="r-stretch"
+                    />
+                </section>
+                <section>
+                    <section>
+                        <h2>Patterns</h2>
+
+                        <p>For 👩‍🍳 <strong>Data providers</strong></p>
+                    </section>
+                    <section>
+                        <h2>stactools-packages</h2>
+
+                        <img
+                            src="img/stactools-packages.png"
+                            class="r-stretch"
+                        />
+
+                        <a href="https://github.com/stactools-packages"
+                            >https://github.com/stactools-packages</a
+                        >
+                    </section>
+                    <section>
+                        <h2><del>stactools</del> STAC tools</h2>
+
+                        <img
+                            src="img/stac-tools.excalidraw.png"
+                            class="r-stretch"
+                        />
+                    </section>
+                    <section>
+                        <h2>Metadata mapping</h2>
+
+                        <div
+                            style="
+                                display: flex;
+                                justify-content: center;
+                                gap: 1em;
+                            "
+                            class="r-stretch"
+                        >
+                            <img
+                                src="img/stactools-drake-meme.jpg"
+                                style="max-height: 400px"
+                            />
+                            <img
+                                src="img/light-system.jpg"
+                                style="max-height: 300px"
+                                class="fragment"
+                            />
+                        </div>
+                    </section>
+                </section>
+                <section>
+                    <h2>Contributing</h2>
+
+                    <img
+                        src="img/bernie-stac-software.jpg"
+                        class="r-stretch"
+                    />
+                </section>
+                <section>
+                    <h2>Fin</h2>
+
+                    <img src="img/repair-tool-kit.jpg" class="r-stretch" />
+
+                    <p>Thanks for your time!</p>
+
+                    <p style="font-size: large">
+                        <a
+                            href="https://www.gadom.ski/presentations/2026-08-26-state-of-stac-tooling.html"
+                            >slides</a
+                        >
+                        |
+                        <a href="https://github.com/gadomski/">@gadomski</a> on
+                        Github |
+                        <a href="https://bsky.app/profile/gadom.ski"
+                            >gadom.ski</a
+                        >
+                        on Bluesky
+                    </p>
+
+                    <p style="font-size: small">
+                        Image
+                        <a
+                            href="https://commons.wikimedia.org/wiki/File:Repair_tool_kit.jpg"
+                            >Wilfredor</a
+                        >, CC0, via Wikimedia Commons
+                    </p>
+                </section>
+            </div>
+        </div>
+
+        <script src="dist/reveal.js"></script>
+        <script src="plugin/notes/notes.js"></script>
+        <script src="plugin/markdown/markdown.js"></script>
+        <script src="plugin/highlight/highlight.js"></script>
+        <script src="plugin/mermaid/mermaid.js"></script>
+        <script>
+            // More info about initialization & config:
+            // - https://revealjs.com/initialization/
+            // - https://revealjs.com/config/
+            Reveal.initialize({
+                hash: true,
+
+                // Learn about plugins: https://revealjs.com/plugins/
+                plugins: [
+                    RevealMarkdown,
+                    RevealHighlight,
+                    RevealNotes,
+                    RevealMermaid,
+                ],
+            });
+        </script>
+    </body>
+</html>
