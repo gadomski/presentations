@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+
+        <title>Using STAC internally</title>
+
+        <link rel="stylesheet" href="dist/reset.css" />
+        <link rel="stylesheet" href="dist/reveal.css" />
+        <link rel="stylesheet" href="dist/theme/devseed.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap"
+            rel="stylesheet"
+        />
+
+        <!-- Theme used for syntax highlighted code -->
+        <link rel="stylesheet" href="plugin/highlight/monokai.css" />
+
+        <style>
+            @font-face {
+                font-family: xkcd-script;
+                src: url("https://cdn.jsdelivr.net/gh/ipython/xkcd-font@master/xkcd-script/font/xkcd-script.woff")
+                    format("woff");
+            }
+            h3.handwriting,
+            p.handwriting {
+                font-family: "xkcd-script", "Shadows Into Light", cursive;
+                font-style: normal;
+                color: #d04200;
+            }
+            .reveal .mermaid {
+                box-shadow: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="reveal">
+            <div class="slides">
+                <section>
+                    <h2>Using STAC internally</h2>
+
+                    <img src="img/dogfood.jpg" class="r-stretch" />
+
+                    <p style="font-size: x-large">
+                        Pete Gadomski, Development Seed
+                    </p>
+
+                    <p style="font-size: small">
+                        Image credit <a href="https://commons.wikimedia.org/wiki/File:A_Beagle_sitting_next_to_dog_food.jpg">Slyronit</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>, via Wikimedia Commons
+                    </p>
+                </section>
+                <section>
+                    <p>Examples from client work as well as R&amp;D projects</p>
+                </section>
+                <section>
+                    <section>
+                        <blockquote>
+                            STAC in, STAC out</br>
+                            &mdash; Matt Hanson
+                        </blockquote>
+                    </section>
+                    <section>
+                        <h2>Airborne Snow Observatories</h2>
+
+                        <img src="img/aso-processing-model.excalidraw.png" class="r-stretch" />
+
+                        <p style="font-size: medium"><a href="https://www.airbornesnowobservatories.com/">https://www.airbornesnowobservatories.com/</a></p>
+                    </section>
+                    <section>
+                        <h2>Provenance?</h2>
+
+                        <blockquote style="font-size: x-large;">
+                            A full provenance model is far beyond the scope of
+                            STAC, and the goal is to align with any good
+                            independent spec that comes along for that. But the
+                            derived_from field is seen as a way to encourage
+                            fuller specs and at least start a linking structure
+                            that can be used as a jumping off point for more
+                            experiments in provenance tracking.
+                        </blockquote>
+
+                        <a href="https://github.com/radiantearth/stac-best-practices/blob/main/best-practices-catalog-and-collection.md#derived-from-relation-derived_from">STAC Best Practices: <code>derived_from</code></a>
+                    </section>
+                    <section>
+                        <h2>processing extension</h2>
+
+                        <table style="font-size: small">
+                            <thead>
+                                <tr>
+                                    <th>Field Name</th>
+                                    <th>Type</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>processing:expression</td>
+                                    <td>Expression Object</td>
+                                    <td>An expression or processing chain that describes how the data has been processed. Alternatively, you can also link to a processing chain with the relation type <code>processing-expression</code> (see below).</td>
+                                </tr>
+                                <tr>
+                                    <td>processing:lineage</td>
+                                    <td>string</td>
+                                    <td>Lineage Information provided as free text information about the how observations were processed or models that were used to create the resource being described NASA ISO. For example, <code>GRD Post Processing</code> for "GRD" product of Sentinel-1 satellites. CommonMark 0.29 syntax MAY be used for rich text representation.</td>
+                                </tr>
+                                <tr>
+                                    <td>processing:level</td>
+                                    <td>string</td>
+                                    <td>The name commonly used to refer to the processing level to make it easier to search for product level across collections or items. The short name must be used (only <code>L</code>, not <code>Level</code>). See the list of suggested processing levels.</td>
+                                </tr>
+                                <tr>
+                                    <td>processing:facility</td>
+                                    <td>string</td>
+                                    <td>The name of the facility that produced the data. For example, <code>Copernicus S1 Core Ground Segment - DPA</code> for product of Sentinel-1 satellites.</td>
+                                </tr>
+                                <tr>
+                                    <td>processing:datetime</td>
+                                    <td>string</td>
+                                    <td>Processing date and time of the corresponding data formatted according to RFC 3339, section 5.6, in UTC.</td>
+                                </tr>
+                                <tr>
+                                    <td>processing:version</td>
+                                    <td>string</td>
+                                    <td>The version of the primary processing software or processing chain that produced the data. For example, this could be the processing baseline for the Sentinel missions.</td>
+                                </tr>
+                                <tr>
+                                    <td>processing:software</td>
+                                    <td>Map&lt;string, string&gt;</td>
+                                    <td>A dictionary with name/version for key/value describing one or more applications or libraries that were involved during the production of the data for provenance purposes.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <p style="font-size: x-large;">
+                            <a href="https://github.com/stac-extensions/processing">https://github.com/stac-extensions/processing</a>
+                        </p>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>Authorization</h2>
+
+                        <img src="img/stac-authorization.jpg" class="r-stretch" />
+                    </section>
+                    <section>
+                        <h2>stac-auth-proxy</h2>
+
+                        <img src="img/stac-auth-proxy.excalidraw.png" class="r-stretch" />
+
+                        <a href="https://developmentseed.org/stac-auth-proxy/">https://developmentseed.org/stac-auth-proxy/</a>
+                    </section>
+                    <section>
+                        <h2>Route-level authorization</h2>
+
+                        <img src="img/stac-auth-proxy-route-level.excalidraw.png" class="r-stretch" />
+
+                        <pre><code data-trim data-noescape class="language-bash" style="font-size: x-large;">
+                            # Set default policy to public
+                            DEFAULT_PUBLIC=true
+
+                            # Require specific scopes for write operations
+                            PRIVATE_ENDPOINTS='{
+                              "^/collections$": [["POST", "collection:create"]],
+                              "^/collections/([^/]+)$": [["PUT", "collection:update"], ["PATCH", "collection:update"], ["DELETE", "collection:delete"]],
+                              "^/collections/([^/]+)/items$": [["POST", "item:create"]],
+                              "^/collections/([^/]+)/items/([^/]+)$": [["PUT", "item:update"], ["PATCH", "item:update"], ["DELETE", "item:delete"]],
+                              "^/collections/([^/]+)/bulk_items$": [["POST", "item:create"]]
+                            }'
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h2>Record-level authorization</h2>
+
+                        <img src="img/stac-auth-proxy-record-level.excalidraw.png" class="r-stretch" />
+
+                        <pre><code data-trim data-noescape class="language-bash" style="font-size: x-large;">
+                            # Basic configuration
+                            ITEMS_FILTER_CLS=stac_auth_proxy.filters:Template
+                            ITEMS_FILTER_ARGS=["collection IN ('public')"]
+
+                            # With keyword arguments
+                            ITEMS_FILTER_CLS=stac_auth_proxy.filters:Opa
+                            ITEMS_FILTER_ARGS=["http://opa:8181", "stac/items/allow"]
+                            ITEMS_FILTER_KWARGS={"cache_ttl": 30.0}
+                        </code></pre>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>Resilience</h2>
+
+                        <ul>
+                            <li>Internal processes evolve and change</li>
+                            <li>Databases are (usually) multi-use</li>
+                            <li>Access patterns are different for internal and external users</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h2>Store STAC in object storage</h2>
+
+                        <img src="img/resilient-stac-storage.excalidraw.png" />
+                    </section>
+                    <section>
+                        <h2>Make object storage usable</h2>
+
+                        <img src="img/resilient-stac-geoparquet-storage.excalidraw.png" />
+                    </section>
+                </section>
+                <section>
+                    <h2>CRUD-via-GUI (under development)</h2>
+
+                    <a href="https://github.com/developmentseed/stac-manager">https://github.com/developmentseed/stac-manager</a>
+                </section>
+                <section>
+                    <h2>Fin</h2>
+
+                    <img src="img/dogfood.jpg" class="r-stretch" />
+
+                    <p>Thanks for your time!</p>
+
+                    <p style="font-size: large">
+                        <a
+                            href="https://www.gadom.ski/presentations/2026-08-26-using-stac-internally.html"
+                            >slides</a
+                        >
+                        |
+                        <a href="https://github.com/gadomski/">@gadomski</a> on
+                        Github |
+                        <a href="https://bsky.app/profile/gadom.ski"
+                            >gadom.ski</a
+                        >
+                        on Bluesky
+                    </p>
+
+                    <p style="font-size: small">
+                        Image
+                        <a
+                            href="https://commons.wikimedia.org/wiki/File:Repair_tool_kit.jpg"
+                            >Wilfredor</a
+                        >, CC0, via Wikimedia Commons
+                    </p>
+                </section>
+            </div>
+        </div>
+
+        <script src="dist/reveal.js"></script>
+        <script src="plugin/notes/notes.js"></script>
+        <script src="plugin/markdown/markdown.js"></script>
+        <script src="plugin/highlight/highlight.js"></script>
+        <script src="plugin/mermaid/mermaid.js"></script>
+        <script>
+            // More info about initialization & config:
+            // - https://revealjs.com/initialization/
+            // - https://revealjs.com/config/
+            Reveal.initialize({
+                hash: true,
+
+                // Learn about plugins: https://revealjs.com/plugins/
+                plugins: [
+                    RevealMarkdown,
+                    RevealHighlight,
+                    RevealNotes,
+                    RevealMermaid,
+                ],
+            });
+        </script>
+    </body>
+</html>
