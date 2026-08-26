@@ -37,6 +37,15 @@
             .reveal .mermaid {
                 box-shadow: none;
             }
+            .reveal-viewport {
+                background-image: none;
+            }
+            .reveal-viewport.show-logo {
+                background-image: url(dist/img/logo.png);
+                background-size: 4%;
+                background-repeat: no-repeat;
+                background-position: 3% 97%;
+            }
         </style>
     </head>
     <body>
@@ -394,6 +403,18 @@
                     RevealNotes,
                     RevealMermaid,
                 ],
+            }).then(() => {
+                const viewport = document.querySelector(".reveal-viewport");
+                const updateLogoVisibility = () => {
+                    const { h } = Reveal.getIndices();
+                    const lastIndex = Reveal.getHorizontalSlides().length - 1;
+                    viewport.classList.toggle(
+                        "show-logo",
+                        h === 0 || h === lastIndex,
+                    );
+                };
+                Reveal.on("slidechanged", updateLogoVisibility);
+                updateLogoVisibility();
             });
         </script>
     </body>
