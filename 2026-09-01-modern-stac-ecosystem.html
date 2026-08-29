@@ -1,0 +1,814 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+
+        <title>The Modern STAC Ecosystem</title>
+
+        <link rel="stylesheet" href="dist/reset.css" />
+        <link rel="stylesheet" href="dist/reveal.css" />
+        <link rel="stylesheet" href="dist/theme/devseed.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap"
+            rel="stylesheet"
+        />
+
+        <!-- Theme used for syntax highlighted code -->
+        <link rel="stylesheet" href="plugin/highlight/monokai.css" />
+
+        <style>
+            @font-face {
+                font-family: xkcd-script;
+                src: url("https://cdn.jsdelivr.net/gh/ipython/xkcd-font@master/xkcd-script/font/xkcd-script.woff")
+                    format("woff");
+            }
+            h3.handwriting,
+            p.handwriting {
+                font-family: "xkcd-script", "Shadows Into Light", cursive;
+                font-style: normal;
+                color: #cf3f02;
+            }
+            .reveal .mermaid {
+                box-shadow: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="reveal">
+            <div class="slides">
+                <section>
+                    <h2>The Modern STAC Ecosystem</h2>
+
+                    <p style="font-size: x-large">
+                        Pete Gadomski, Development Seed, STAC PSC
+                    </p>
+                </section>
+                <section>
+                    <section>
+                        <h2>What the STAC?</h2>
+
+                        <p>
+                            Open, community specification
+                            <strong class="fragment">and ecosystem</strong> for
+                            geospatial search and discovery
+                        </p>
+
+                        <img
+                            src="img/stac-is-a-map.excalidraw.png"
+                            class="r-stretch"
+                        />
+
+                        <p
+                            style="
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                                font-size: x-large;
+                            "
+                        >
+                            <a href="https://stacspec.org/"
+                                >https://stacspec.org/</a
+                            >
+                        </p>
+                    </section>
+                    <section>
+                        <h2>A brief STAC history</h2>
+
+                        <pre class="mermaid r-stretch">
+---
+config:
+    theme: neutral
+    look: handdrawn
+---
+timeline
+    2017 : Initial commit to what became the stac-spec repository
+            : Sprint 1 (Boulder)
+            : v0.1.0
+    2018 : Name changed to STAC
+            : Sprints 2 (Ft. Collins) and 3 (Menlo Park)
+            : v0.4.0 to v0.6.0
+    2019 : Sprints 4 and 5 (Arlington)
+            : v0.7.0 to v0.8.0
+    2020 : Sprint 6 (Virtual)
+            : v0.9.0
+    2021 : v1.0.0
+    2023 : Sprint 7 (Philadelphia)
+            : API v1.0.0
+    2024 : v1.1.0
+    2025 : Sprint 8 (Italy)
+            : OGC Community Standard
+    2026 : Workshop 1 (Japan)
+                        </pre>
+
+                        <p
+                            style="
+                                font-size: large;
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                            "
+                        >
+                            <img
+                                src="img/qr-stac-retrospective-part-1.png"
+                                height="150"
+                            />
+                            <a
+                                href="https://element84.com/geospatial/stac-a-retrospective-part-1/"
+                                >STAC: A Retrospective, Part 1</a
+                            >
+                        </p>
+                    </section>
+                    <section>
+                        <h2>STAC entities</h2>
+
+                        <img
+                            src="img/stac-entities.excalidraw.png"
+                            class="r-stretch"
+                        />
+                    </section>
+                    <section>
+                        <h2>Batteries included</h2>
+
+                        <blockquote style="font-size: xx-large">
+                            ...we knew the path to that goal was through a
+                            healthy ecosystem of software. From day one, the
+                            focus was on creating catalogs and tools that were
+                            not just compliant, but genuinely useful. We had a
+                            working server at the end of the first sprint.
+                            <br />
+                            &mdash; Matt Hanson
+                        </blockquote>
+
+                        <img
+                            src="img/qr-stac-retrospective-part-2.png"
+                            height="150"
+                        />
+                        <p
+                            style="
+                                font-size: large;
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                            "
+                        >
+                            <a
+                                href="https://element84.com/software-engineering/stac-a-retrospective-part-2-why-stac-was-successful/"
+                                >STAC: A Retrospective, Part 2 (Why STAC was
+                                Successful)</a
+                            >
+                        </p>
+                    </section>
+                </section>
+                <section>
+                    <h2>Themes</h2>
+
+                    <ul>
+                        <li class="fragment">
+                            After initial expansion, it's time for cleanup
+                        </li>
+                        <li class="fragment">
+                            Distill and talk about lessons learned
+                        </li>
+                        <li class="fragment">
+                            With maturity comes security (requirements)
+                        </li>
+                    </ul>
+                </section>
+                <section>
+                    <section>
+                        <h2>The Modern STAC Ecosystem</h2>
+                        <img src="img/pepe-silvia.jpg" />
+                    </section>
+                    <section>
+                        <h2>STAC actors</h2>
+
+                        <img
+                            src="img/stac-actors.excalidraw.png"
+                            class="r-stretch"
+                        />
+
+                        <ul style="font-size: x-large">
+                            <li>
+                                👩‍🍳 <strong>Data providers</strong> produce
+                                geospatial data and index those data with STAC
+                            </li>
+                            <li>
+                                💁 <strong> Developers </strong> build and
+                                maintain infrastructure to serve STAC to the
+                                world
+                            </li>
+                            <li>
+                                😋 <strong> Data users </strong> use STAC to
+                                find, visualize, and use geospatial data
+                            </li>
+                        </ul>
+                    </section>
+                    <section>
+                        <img src="img/stac-utils.png" class="r-stretch" />
+
+                        <p
+                            style="
+                                font-size: large;
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                            "
+                        >
+                            <img src="img/qr-stac-utils.png" height="150" />
+                            <a href="https://stac-utils.github.io/"
+                                >https://stac-utils.github.io/</a
+                            >
+                        </p>
+                    </section>
+                    <section>
+                        <img src="img/stac-index.png" class="r-stretch" />
+
+                        <p
+                            style="
+                                font-size: large;
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                            "
+                        >
+                            <img src="img/qr-stac-index.png" height="150" />
+                            <a href="https://stacindex.org/ecosystem"
+                                >https://stacindex.org/ecosystem</a
+                            >
+                        </p>
+                    </section>
+                </section>
+                <section>
+                    <h2>👩‍🍳 <strong>Data providers</strong></h2>
+
+                    <p style="font-size: xx-large">
+                        produce geospatial data and index those data with STAC
+                    </p>
+                </section>
+                <section>
+                    <section>
+                        <h2>PySTAC</h2>
+
+                        <pre>
+                            <code style="font-size: large" data-trim class="language-shell">
+                                python -m pip install pystac
+                            </code>
+                        </pre>
+
+                        <pre>
+                            <code style="font-size: large" data-trim class="language-python">
+                                root_catalog = Catalog.from_file("./example-catalog/catalog.json")
+                                print(f"ID: {root_catalog.id}")
+                                print(f"Title: {root_catalog.title or 'N/A'}")
+                                print(f"Description: {root_catalog.description or 'N/A'}")
+                            </code>
+                        </pre>
+
+                        <img src="img/pystac-used-by.png" />
+                    </section>
+                    <section>
+                        <h2>PySTAC v1.15</h2>
+
+                        <img src="img/pystac-v1.15.png" class="r-stretch" />
+
+                        <pre>
+                        <code style="font-size: large" data-trim class="language-toml">
+                            dependencies = [
+                                "pystac >= 1.15",
+                                "pystac-ext-projection == 2.0.1",
+                                "pystac-ext-my-custom-extension"
+                            ]
+                        </code>
+                        </pre>
+                    </section>
+                    <section>
+                        <h2>PySTAC v2 (WIP)</h2>
+
+                        <ul style="font-size: x-large">
+                            <li>
+                                Keep the core data structure APIs basically the
+                                same
+                            </li>
+                            <li>Stay low-dependency by default</li>
+                            <li>Don't mutate on read</li>
+                            <li>
+                                (optional)
+                                <a
+                                    href="https://github.com/developmentseed/obstore"
+                                    >obstore</a
+                                >
+                                for reading and writing
+                            </li>
+                            <li>
+                                (optional) <strong>stac-geoparquet</strong> via
+                                <a href="https://stac-utils.github.io/rustac-py"
+                                    >rustac</a
+                                >
+                            </li>
+                        </ul>
+
+                        <p
+                            style="
+                                font-size: large;
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                            "
+                        >
+                            <img src="img/qr-pystac-v2.png" height="150" />
+                            <a
+                                href="https://stac-utils.github.io/pystac/pystac-v2.0/"
+                                >https://stac-utils.github.io/pystac/pystac-v2.0/</a
+                            >
+                        </p>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>stactools</h2>
+
+                        <img src="img/stactools.png" class="r-stretch" />
+                    </section>
+                    <section>
+                        <h2><del>stactools</del> STAC tools</h2>
+
+                        <img
+                            src="img/stac-tools.excalidraw.png"
+                            class="r-stretch"
+                        />
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>GeoZarr and STAC</h2>
+
+                        <img src="img/stac-zarr-sprint.jpg" class="r-stretch" />
+
+                        <p>Sprint in Frascati, Italy, October 14-16, 2025</p>
+                    </section>
+                    <section>
+                        <h2>State of play &amp; best practices</h2>
+
+                        <p style="font-size: large">
+                            GeoZarr conventions explicitly borrow concepts from
+                            STAC extensions
+                        </p>
+                        <p style="font-size: large">
+                            Zarr groups and arrays can be represented by 2 STAC
+                            object types depending on the use case.
+                        </p>
+
+                        <ul style="font-size: large">
+                            <li>
+                                A STAC Item is appropriate when the Zarr group
+                                represents a particular location in space and/or
+                                time
+                            </li>
+                            <li>
+                                A STAC Collection is appropriate when the Zarr
+                                group represents multiple locations in space
+                                and/or time
+                            </li>
+                        </ul>
+
+                        <p
+                            style="
+                                font-size: large;
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                            "
+                        >
+                            <img
+                                src="img/qr-stac-zarr-best-practices.png"
+                                height="150"
+                            />
+                            <a
+                                href="https://github.com/radiantearth/stac-best-practices/blob/main/best-practices-zarr.md"
+                            >
+                                https://github.com/radiantearth/stac-best-practices/blob/main/best-practices-zarr.md
+                            </a>
+                        </p>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>AI-ready STAC</h2>
+
+                        <img src="img/bender-rodriguez.png" class="r-stretch" />
+
+                        <p>Good news: good STAC is inherently AI-ready!</p>
+
+                        <p class="fragment">
+                            Bad news: not all STAC is good STAC
+                        </p>
+                    </section>
+                    <section>
+                        <h2>Easy wins to make the robots happy</h2>
+
+                        <ul style="font-size: xx-large">
+                            <li>
+                                <strong>Make collections public</strong>, even
+                                if your items and assets aren't
+                            </li>
+                            <li>Meaningful <strong>descriptions</strong></li>
+                            <li>Valid <strong>license</strong></li>
+                            <li>Provide <strong>summaries</strong></li>
+                            <li>Lots of <strong>links</strong></li>
+                            <li>Anything "interesting"</li>
+                        </ul>
+
+                        <p class="handwriting">
+                            Your collections are your "home pages"<br />
+                            Make them rich and informative
+                        </p>
+                    </section>
+                </section>
+                <section>
+                    <h2>💁 Developers</h2>
+                    <p style="font-size: xx-large">
+                        build and maintain infrastructure to serve STAC to the
+                        world
+                    </p>
+                </section>
+                <section>
+                    <section>
+                        <h2>Authorization</h2>
+
+                        <img
+                            src="img/stac-authorization.jpg"
+                            class="r-stretch"
+                        />
+                    </section>
+                    <section>
+                        <h2>stac-auth-proxy</h2>
+
+                        <img
+                            src="img/stac-auth-proxy.excalidraw.png"
+                            class="r-stretch"
+                        />
+
+                        <p
+                            style="
+                                display: flex;
+                                font-size: large;
+                                flex-direction: column;
+                                align-items: center;
+                            "
+                        >
+                            <img
+                                src="img/qr-stac-auth-proxy.png"
+                                height="150"
+                            />
+                            <a
+                                href="https://developmentseed.org/stac-auth-proxy/"
+                                >https://developmentseed.org/stac-auth-proxy/</a
+                            >
+                        </p>
+                    </section>
+                    <section>
+                        <h2>Route-level authorization</h2>
+
+                        <img
+                            src="img/stac-auth-proxy-route-level.excalidraw.png"
+                            class="r-stretch"
+                        />
+
+                        <pre><code data-trim data-noescape class="language-bash" style="font-size: x-large;">
+                            # Set default policy to public
+                            DEFAULT_PUBLIC=true
+
+                            # Require specific scopes for write operations
+                            PRIVATE_ENDPOINTS='{
+                              "^/collections$": [["POST", "collection:create"]],
+                              "^/collections/([^/]+)$": [["PUT", "collection:update"], ["PATCH", "collection:update"], ["DELETE", "collection:delete"]],
+                              "^/collections/([^/]+)/items$": [["POST", "item:create"]],
+                              "^/collections/([^/]+)/items/([^/]+)$": [["PUT", "item:update"], ["PATCH", "item:update"], ["DELETE", "item:delete"]],
+                              "^/collections/([^/]+)/bulk_items$": [["POST", "item:create"]]
+                            }'
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h2>Record-level authorization</h2>
+
+                        <img
+                            src="img/stac-auth-proxy-record-level.excalidraw.png"
+                            class="r-stretch"
+                        />
+
+                        <pre><code data-trim data-noescape class="language-bash" style="font-size: x-large;">
+                            # Basic configuration
+                            ITEMS_FILTER_CLS=stac_auth_proxy.filters:Template
+                            ITEMS_FILTER_ARGS=["collection IN ('public')"]
+
+                            # With keyword arguments
+                            ITEMS_FILTER_CLS=stac_auth_proxy.filters:Opa
+                            ITEMS_FILTER_ARGS=["http://opa:8181", "stac/items/allow"]
+                            ITEMS_FILTER_KWARGS={"cache_ttl": 30.0}
+                        </code></pre>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>stac-geoparquet</h2>
+
+                        <img
+                            src="img/microsoft-pc-stac-geoparquet.png"
+                            class="r-stretch"
+                        />
+                    </section>
+                    <section>
+                        <h2>stac-geoparquet complements APIs</h2>
+
+                        <img
+                            src="img/stac-geoparquet-snapshots.excalidraw.png"
+                            class="r-stretch"
+                        />
+                    </section>
+                    <section>
+                        <h2>stac-geoparquet best practices</h2>
+
+                        <p class="handwriting">These are a work in progress</p>
+
+                        <ul>
+                            <li>Sort on space <em>and</em> time</li>
+                            <li>Prefix item ids with search key</li>
+                            <li>Use (hive) partitioning</li>
+                        </ul>
+
+                        <p
+                            style="
+                                display: flex;
+                                font-size: large;
+                                flex-direction: column;
+                                align-items: center;
+                            "
+                        >
+                            <img
+                                src="img/qr-stac-geoparquet-best-practices.png"
+                                height="150"
+                            />
+                            <a
+                                href="https://github.com/radiantearth/stac-geoparquet-spec/blob/main/docs/best-practices.md"
+                                >https://github.com/radiantearth/stac-geoparquet-spec/blob/main/docs/best-practices.md</a
+                            >
+                        </p>
+                    </section>
+                    <section>
+                        <h2>Cloud-optimized stac-geoparquet</h2>
+
+                        <pre><code data-trim data-noescape class="language-sh" style="font-size: x-large;">
+                            cosgp create source destination
+                            aws s3 sync destination s3://my-bucket/destination  # or whatever
+                        </code></pre>
+
+                        <table style="font-size: xx-large">
+                            <thead>
+                                <tr>
+                                    <th>Benchmark</th>
+                                    <th>Original (s)</th>
+                                    <th>Optimized (s)</th>
+                                    <th>Speedup</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Count in bbox</td>
+                                    <td>72</td>
+                                    <td>1.5</td>
+                                    <td>49</td>
+                                </tr>
+                                <tr>
+                                    <td>Geometry intersects</td>
+                                    <td>11</td>
+                                    <td>1.6</td>
+                                    <td>9</td>
+                                </tr>
+                                <tr>
+                                    <td>Most recent</td>
+                                    <td>28</td>
+                                    <td>2.3</td>
+                                    <td>12</td>
+                                </tr>
+                                <tr>
+                                    <td>ID</td>
+                                    <td>26</td>
+                                    <td>2.2</td>
+                                    <td>12</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <p style="font-size: large">
+                            <a
+                                href="https://github.com/developmentseed/cloud-optimized-stac-geoparquet"
+                                >https://github.com/developmentseed/cloud-optimized-stac-geoparquet</a
+                            >
+                        </p>
+                    </section>
+                </section>
+                <section data-visibility="hidden">
+                    <section>
+                        <h2>Multi-tenancy and federation</h2>
+
+                        <ul>
+                            <li>Collection search</li>
+                            <li>Hierarchical APIs</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h2>Federated collection search</h2>
+
+                        <img
+                            src="img/stac-collection-discovery.png"
+                            class="r-stretch"
+                        />
+
+                        <p
+                            style="
+                                display: flex;
+                                font-size: large;
+                                flex-direction: column;
+                                align-items: center;
+                            "
+                        >
+                            <img src="img/qr-federated-stac.png" height="100" />
+                            <a
+                                href="https://developmentseed.org/blog/2026-07-30-stac-discovery/"
+                                >https://developmentseed.org/blog/2026-07-30-stac-discovery/</a
+                            >
+                        </p>
+                    </section>
+                    <section>
+                        <h2>Multi-tenant catalogs</h2>
+                    </section>
+                </section>
+                <section data-visibility="hidden">
+                    <h2>Capability gap-filling</h2>
+
+                    <ul>
+                        <li>
+                            Filter (CQL2) support in
+                            <strong>stac-server (Node)</strong>
+                        </li>
+                    </ul>
+                </section>
+                <section>
+                    <h2>😋 Data users</h2>
+                    <p>use STAC to find, visualize, and use geospatial data</p>
+                </section>
+                <section>
+                    <section>
+                        <h2>stac-browser</h2>
+
+                        <img src="img/stac-browser.png" class="r-stretch" />
+
+                        <p
+                            style="
+                                display: flex;
+                                font-size: large;
+                                flex-direction: column;
+                                align-items: center;
+                            "
+                        >
+                            <img src="img/qr-stac-browser.png" height="100" />
+                            <a href="https://browser.moregeo.it/"
+                                >https://browser.moregeo.it/</a
+                            >
+                        </p>
+                    </section>
+                    <section>
+                        <h2>stac-browser v5.1 🥳</h2>
+
+                        <ul>
+                            <li>GeoZarr visualization</li>
+                            <li>Better search</li>
+                            <li>Code snippets</li>
+                            <li>Favorites</li>
+                            <li>Editing via transactions extension</li>
+                            <li>And more...</li>
+                        </ul>
+                    </section>
+                </section>
+                <section>
+                    <h2>stac-map</h2>
+
+                    <img src="img/stac-map.gif" class="r-stretch" />
+
+                    <p
+                        style="
+                            display: flex;
+                            font-size: large;
+                            flex-direction: column;
+                            align-items: center;
+                        "
+                    >
+                        <img src="img/qr-stac-map.png" height="100" />
+                        <a href="https://developmentseed.org/stac-map"
+                            >https://developmentseed.org/stac-map</a
+                        >
+                    </p>
+                </section>
+                <section>
+                    <section>
+                        <h2>rustac for stac-geoparquet</h2>
+
+                        <pre><code data-trim data-noescape class="language-shell" style="font-size: x-large;">
+                            python -m pip install rustac
+                        </code></pre>
+
+                        <pre><code data-trim data-noescape class="language-python" style="font-size: x-large;">
+                            for item in await rustac.search("s3://bucket/collection/*.parquet"):
+                                print(f"- {item['id']}")
+                        </code></pre>
+
+                        <p
+                            style="
+                                display: flex;
+                                align-items: center;
+                                flex-direction: column;
+                            "
+                        >
+                            <img src="img/qr-rustac.png" height="150" />
+                            <a
+                                href="https://github.com/stac-utils/rustac-py"
+                                style="font-size: large"
+                                >https://github.com/stac-utils/rustac-py</a
+                            >
+                        </p>
+                    </section>
+                    <section>
+                        <h2>Snapshots for reproducibility</h2>
+
+                        <pre><code data-trim data-noescape class="language-python" style="font-size: x-large;">
+                            await rustac.search_to(
+                                "items.parquet",
+                                "https://stac.eoapi.dev",
+                                collections=["MAXAR_yellowstone_flooding22"],
+                            )
+                            for item in await rustac.search("items.parquet"):
+                                print(f"- {item['id']}")
+                        </code></pre>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>Where will we be next year?</h2>
+
+                        <img src="img/mountain.jpg" class="r-stretch" />
+                    </section>
+                    <section>???</section>
+                </section>
+                <section>
+                    <h2>Fin</h2>
+
+                    <p>The Modern STAC Ecosystem</p>
+
+                    <p>Thanks for your time!</p>
+
+                    <p style="font-size: large">
+                        <a
+                            href="https://www.gadom.ski/presentations/2026-09-01-modern-stac-ecosystem.html"
+                            >slides</a
+                        >
+                        |
+                        <a href="https://github.com/gadomski/">@gadomski</a> on
+                        Github |
+                        <a href="https://bsky.app/profile/gadom.ski"
+                            >gadom.ski</a
+                        >
+                        on Bluesky
+                    </p>
+                </section>
+            </div>
+        </div>
+
+        <script src="dist/reveal.js"></script>
+        <script src="plugin/notes/notes.js"></script>
+        <script src="plugin/markdown/markdown.js"></script>
+        <script src="plugin/highlight/highlight.js"></script>
+        <script src="plugin/mermaid/mermaid.js"></script>
+        <script>
+            // More info about initialization & config:
+            // - https://revealjs.com/initialization/
+            // - https://revealjs.com/config/
+            Reveal.initialize({
+                hash: true,
+
+                // Learn about plugins: https://revealjs.com/plugins/
+                plugins: [
+                    RevealMarkdown,
+                    RevealHighlight,
+                    RevealNotes,
+                    RevealMermaid,
+                ],
+            });
+        </script>
+    </body>
+</html>
