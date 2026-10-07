@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+
+        <title>The Modern STAC Software Ecosystem</title>
+
+        <link rel="stylesheet" href="dist/reset.css" />
+        <link rel="stylesheet" href="dist/reveal.css" />
+        <link rel="stylesheet" href="dist/theme/devseed.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap"
+            rel="stylesheet"
+        />
+
+        <!-- Theme used for syntax highlighted code -->
+        <link rel="stylesheet" href="plugin/highlight/monokai.css" />
+
+        <style>
+            @font-face {
+                font-family: xkcd-script;
+                src: url("https://cdn.jsdelivr.net/gh/ipython/xkcd-font@master/xkcd-script/font/xkcd-script.woff")
+                    format("woff");
+            }
+            h3.handwriting,
+            p.handwriting {
+                font-family: "xkcd-script", "Shadows Into Light", cursive;
+                font-style: normal;
+                color: #cf3f02;
+            }
+            .reveal .mermaid {
+                box-shadow: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="reveal">
+            <div class="slides">
+                <section>
+                    <h2>Rewriting PySTAC</h2>
+
+                    <img
+                        alt="The &#039;Endurance&#039; frozen in 76-35 South, 1915 - photographed by Frank Hurley (3534625867)"
+                        src="https://upload.wikimedia.org/wikipedia/commons/7/74/The_%27Endurance%27_frozen_in_76-35_South%2C_1915_-_photographed_by_Frank_Hurley_%283534625867%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled"
+                        class="r-stretch"
+                    />
+
+                    <p style="font-size: x-large">
+                        Pete Gadomski and Julia Signell, Development Seed, STAC
+                        PSC
+                    </p>
+
+                    <p style="font-size: large">
+                        <a
+                            href="https://commons.wikimedia.org/wiki/File:The_%27Endurance%27_frozen_in_76-35_South,_1915_-_photographed_by_Frank_Hurley_(3534625867).jpg"
+                            >State Library of New South Wales collection</a
+                        >, No restrictions, via Wikimedia Commons
+                    </p>
+                </section>
+                <section>
+                    <h2>What is a STAC?</h2>
+
+                    <p>SpatioTemporal Asset Catalog</p>
+
+                    <blockquote>
+                        An open specification
+                        <span class="fragment">
+                            and an ecosystem of extensions and software for that
+                            specification.
+                        </span>
+                    </blockquote>
+                </section>
+                <section>
+                    <section>
+                        <h2>What is a PySTAC?</h2>
+
+                        <p>The primary Python part of that ecosystem.</p>
+
+                        <blockquote class="fragment">
+                            PySTAC is essentially a fancy JSON munging tool that
+                            helps people read and write STAC metadata using
+                            Python objects.
+                        </blockquote>
+                    </section>
+                    <section>
+                        <h2>What is a PySTAC?</h2>
+
+                        <img
+                            class="r-stretch"
+                            src="img/pystac-used-by-contributors.png"
+                        />
+                    </section>
+                </section>
+                <section>
+                    <h2>The history of PySTAC</h2>
+
+                    <pre><code data-trim class="language-git">
+                        commit 1fe88114bb30fc58692d77a92e8e08b80ad47ef8
+                        Author: lossyrob &lt;rdemanuele@gmail.com&gt;
+                        Date:   Thu Sep 12 17:10:08 2019 -0400
+
+                            Initial commit.
+                    </code></pre>
+
+                    <ul style="font-size: x-large">
+                        <li>v1.0.0 release in 2021</li>
+                        <li>Currently on v1.15.2</li>
+                    </ul>
+                </section>
+                <section>
+                    <section>
+                        <h2>The tensions of PySTAC</h2>
+
+                        <img class="r-stretch" src="img/stac-toy-story.jpg" />
+                    </section>
+                    <section>
+                        <h3>The tensions of PySTAC: data producers</h3>
+
+                        <ul>
+                            <li>Strict, validated outputs</li>
+                            <li>Link mutations</li>
+                            <li>Type hints for extensions</li>
+                            <li>Lots of extensions</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h3>The tensions of PySTAC: data consumers</h3>
+
+                        <ul>
+                            <li>Permissive reads</li>
+                            <li>Multiple extension versions</li>
+                            <li>Read configuration (e.g. auth)</li>
+                        </ul>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>PySTAC v2</h2>
+
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/b/be/TheSouthernParty_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original" class="r-stretch" />
+
+                        <p style="font-size: large">
+                            <a href="https://commons.wikimedia.org/wiki/File:TheSouthernParty_(cropped).jpg">probably James Murray (1865–1914)</a>, Public domain, via Wikimedia Commons
+                        </p>
+                    </section>
+                    <section>
+                        <h2>An attempt</h2>
+
+                        <img class="r-stretch" src="img/pystac-v2.png" />
+                    </section>
+                    <section>
+                        <h2>Annnnd...abandoned</h2>
+
+                        <img
+                            class="r-stretch"
+                            src="img/pystac-v2-abandonment.png"
+                        />
+                    </section>
+                </section>
+                <section>
+                    <h2>What have we learned?</h2>
+
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/8/8e/AllSafeAllWell.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original" class="r-stretch" />
+
+                    <p style="font-size: large">
+                        <a href="https://commons.wikimedia.org/wiki/File:AllSafeAllWell.jpg">Frank Hurley</a>, Public domain, via Wikimedia Commons
+                    </p>
+                </section>
+                <section>
+                    <section>
+                        <h2>
+                            We could solve a lot of the pain points without
+                            breaking the API
+                        </h2>
+                    </section>
+                    <section>
+                        <img src="img/free-the-extensions.jpg" />
+
+                        <pre>
+                        <code style="font-size: large" data-trim class="language-toml">
+                            dependencies = [
+                                "pystac >= 1.15",
+                                "pystac-ext-projection == 2.0.1",
+                                "pystac-ext-my-custom-extension"
+                            ]
+                        </code>
+                        </pre>
+                    </section>
+                    <section>
+                        <h3>Full STAC v1.1 support (WIP)</h3>
+
+                        <img
+                            src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExbnVjdGx0ZXRxbXVlY2FrdzJta2prMGtvdTNrYnhzczBkOWw0MjBreiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/eP1fobjusSbu/giphy.gif"
+                            class="r-stretch"
+                        />
+
+                        <p>
+                            <a
+                                href="https://github.com/stac-utils/pystac/issues/1375"
+                                >https://github.com/stac-utils/pystac/issues/1375</a
+                            >
+                        </p>
+                    </section>
+                    <section>
+                        <h2>The next generation of STAC I/O</h2>
+
+                        <ul>
+                            <li>object storage (cloud storage)</li>
+                            <li>stac-geoparquet</li>
+                            <li>auth patterns</li>
+                            <li>(maybe) async?</li>
+                        </ul>
+
+                        <p>
+                            <a
+                                href="https://github.com/stac-utils/pystac/milestone/41"
+                                >https://github.com/stac-utils/pystac/milestone/41</a
+                            >
+                        </p>
+                    </section>
+                    <section>
+                        <h2>PySTAC is good enough</h2>
+
+                        <img
+                            src="img/sharp-focused-tools.jpg"
+                            class="r-stretch"
+                        />
+
+                        <p>Downside: increased ecosystem complexity</p>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h3>
+                            Are these kinds of utility libraries still important
+                            in the age of AI coding?
+                        </h3>
+
+                        <img src="img/bender-rodriguez.png" class="r-stretch" />
+                    </section>
+                    <section>
+                        <h2>Correctness is important</h2>
+                    </section>
+                    <section>
+                        <h2>
+                            Re-writing your entire processing stack is expensive
+                        </h2>
+
+                        <p>And then you have to maintain it</p>
+                    </section>
+                    <section>
+                        <h3>Sharp, focused tools will outperform monoliths</h3>
+                    </section>
+                </section>
+                <section>
+                    <h2>Rewriting PySTAC</h2>
+
+                    <img
+                        alt="The &#039;Endurance&#039; frozen in 76-35 South, 1915 - photographed by Frank Hurley (3534625867)"
+                        src="https://upload.wikimedia.org/wikipedia/commons/7/74/The_%27Endurance%27_frozen_in_76-35_South%2C_1915_-_photographed_by_Frank_Hurley_%283534625867%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled"
+                        class="r-stretch"
+                    />
+
+                    <p
+                        style="
+                            display: flex;
+                            font-size: large;
+                            flex-direction: column;
+                            align-items: center;
+                        "
+                    >
+                        <span>
+                            <a
+                                href="https://www.gadom.ski/presentations/2026-10-07-pystac-v2.html"
+                                >slides</a
+                            >
+                            |
+                            <a href="https://github.com/gadomski/">@gadomski</a>
+                            on Github |
+                            <a href="https://bsky.app/profile/gadom.ski"
+                                >gadom.ski</a
+                            >
+                            on Bluesky
+                        </span>
+                        <img src="img/qr-2026-10-07.png" height="100" />
+                    </p>
+                </section>
+            </div>
+        </div>
+
+        <script src="dist/reveal.js"></script>
+        <script src="plugin/notes/notes.js"></script>
+        <script src="plugin/markdown/markdown.js"></script>
+        <script src="plugin/highlight/highlight.js"></script>
+        <script src="plugin/mermaid/mermaid.js"></script>
+        <script>
+            // More info about initialization & config:
+            // - https://revealjs.com/initialization/
+            // - https://revealjs.com/config/
+            Reveal.initialize({
+                hash: true,
+
+                // Learn about plugins: https://revealjs.com/plugins/
+                plugins: [
+                    RevealMarkdown,
+                    RevealHighlight,
+                    RevealNotes,
+                    RevealMermaid,
+                ],
+            });
+        </script>
+    </body>
+</html>
